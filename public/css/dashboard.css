@@ -1,0 +1,189 @@
+small{
+    font-size: 12px;
+}
+.light-bg{
+    background-color: #424242 !important;
+}
+.light-bg:hover{
+    background-color: #828282 !important;
+}
+#dashboard-content{
+    position: absolute;
+    right:0px;
+    float:right !important;
+    padding:0px; 
+}
+.dashboard-header{
+    background-color: #6610f2;
+    padding: 20px 30px;
+}
+.dashboard-header .header{
+    color: #fff;
+    margin:0px !important;
+    font-family: inherit;
+    font-size: 32px
+}
+.submenu-less-div-content{
+    padding: 2em 3em;
+}
+.content-body div{
+    font-family: inherit;
+}
+.sidebar-toggler{
+    display: none;
+}
+.sub-header-hr{
+    clear:left;
+    margin-top: 0px !important;
+    height:15px !important;
+    background-color: #e6e6e6;
+    opacity: 0.5
+}
+.analytics-block{
+    display: flex;
+    flex-wrap: wrap;
+}
+.analytics-card{
+    padding:10px;
+    width:25%;
+    display: flex;
+}
+.analytics-card > div{
+    padding: 1em;
+    width: 100%;
+}
+.analytics-card p{
+    font-size: 12px
+}
+.analytics-card h1{
+    margin:0px;
+    text-align:right;
+    line-height:1em;
+}
+.analytics-card .h1-text{
+    font-size: 18px
+}
+.table-btn{
+    padding: 5px 10px;
+}
+.span-header-label{
+    font-size:8px; 
+    color: #626262;
+}
+.review-box > div{
+    padding: 2em;
+    font-size: 16px;
+    color: #000;
+}
+.profile-pic{
+    border-radius: 50%;
+}
+.profile-summary-block .profile-pic{
+    margin-top: -2.5em;
+}
+.profile-summary-block h1, .profile-summary-block p{
+    margin-bottom: 0px;
+    margin-top:0px
+}
+.label{
+    padding: 7px 35px;
+    font-size: 14px;
+    border-radius: 20px;
+}
+.profile-summary-block > div{
+    padding: 2.5em;
+}
+.profile-basic-data{
+    background-color: #f2f2f2;
+    border-radius: 15px;
+}
+.profile-basic-data > div{
+    padding: 15px;
+    border: 0px;
+    border-left: 5px solid;
+    margin-bottom: 2em;
+}
+.profile-basic-data > div:last-child{
+    margin-bottom: 0em
+}
+.profile-basic-data p{
+    font-size: 12px
+}
+.profile-biodata > div{
+    display: flex;
+    padding: 10px;
+    width:33.33%;
+}
+.profile-biodata > div > .card{
+    padding: 10px;
+    width: 100%;
+    background-color: #f6f6f6;
+    border:0px;
+    border-left: 4px solid;
+}
+.profile-biodata h1{
+    font-size: 20px;
+}
+.profile-biodata p{
+    font-size: 12px;
+    margin-bottom: 10px
+}
+
+/* Styling of modals */
+.modal-content p{
+    margin-bottom: 0px
+}
+
+@media only screen and (max-width: 575px) {
+    .analytics-card{
+        padding:5px;
+        width:50% !important;
+    }
+}
+
+@media only screen and (min-width: 575px) and (max-width: 767px) {
+
+}
+
+@media only screen and (max-width: 767px) {
+    .header-menu-icon{
+        float:right;
+    }
+    .header-title{
+        float:left
+    }
+    .sidebar-toggler{
+        display: block;
+        font-size: 20px;
+        padding: 7px 14px !important;
+        border: 1.5px solid #fff;
+        color: #fff;
+        border-radius: 10px;
+    }
+    .sidebar-toggler:hover{
+        cursor: pointer;
+        background-color: #424242;
+    }
+    .sidebar{
+        left: -100%;
+    }
+    .showSideBar{
+        left: 0%;
+    }
+    .side-bar-cancel-btn{
+        padding: 4px 8px !important
+    }
+    .analytics-card{
+        padding:5px;
+        width:33.33%;
+    }
+}
+
+@media only screen and (min-width: 767px) and (max-width: 991px){
+
+}
+
+@media only screen and (min-width: 991px){
+
+}
+

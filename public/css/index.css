@@ -1,0 +1,151 @@
+.flex-grid-container{
+    display: flex;
+    flex-wrap: wrap;
+}
+.flex-grid-container > div{
+    padding:12em 5em;
+    width:50%;
+    /* display: flex; */
+}
+.services-container{
+    padding: 8em 4em;
+}
+.service-flex-block, .stats-flex-block{
+    display: flex;
+    flex-wrap: wrap;
+}
+.service-block{
+    padding: 10px;
+    width:25%;
+    display: flex;
+}
+.service-block > div{
+    padding: 30px;
+    text-align: left;
+    width: 100%;
+}
+.service-block p{
+    font-size: 16px;
+}
+.cta-block, .testimonials-container > div{
+    padding: 8em 12em;
+}
+.stat-block{
+    padding: 10px;
+    width:33.3%;
+    display: flex;
+}
+.stat-block > div{
+    padding: 30px;
+    width: 100%;
+    border-radius: 15px;
+    padding-bottom: 0.5em;
+    border-bottom: 15px solid #f56a6a ;
+}
+.stat-block .caption{
+    text-decoration: underline;
+}
+.stat-block .stat-value{
+    font-size: 60px;
+    font-weight:bold;
+    text-align: center;
+}
+.stat-unit{
+    text-align:right;
+    font-size: 24px;
+}
+.testimonials-container{
+    background: url('../images/rt.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.testimonials-container > div{
+    background-color: rgba(0,0,0,0.75);
+}
+.testimonial-carousel{
+    margin-top: 2em;
+}
+.testimonial-holder{
+    margin-top: 2em !important;   
+    color: #00B6E5 !important;
+}
+.testimonial-caption{
+    font-size: 14px;
+    font-style: italic;
+}
+.carousel-item p{
+    text-align: center;
+    color: #c2c2c2;
+}
+
+
+
+@media only screen and (max-width: 585px){
+    .grid-text{
+        text-align: center;
+    }
+    .service-block{
+        padding: 10px;
+        width:100%;
+    }
+    .services-container{
+        padding: 4em 1em;
+    }
+    .service-block > div{
+        padding: 30px;
+        text-align: center;
+    }
+    .service-block .short-hr{
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .service-block p{
+        font-size: 16px;
+    }
+    .cta-block, .testimonials-container > div{
+        padding: 4em 3em;
+    }
+    .cta-block .xl-header{
+        font-size: 28px !important;
+    }
+    .stat-block .stat-value{
+        font-size: 60px;
+    }
+    .stat-unit{
+        text-align:right;
+        font-size: 18px;
+    }
+}
+
+@media only screen  and (min-width: 586px) and (max-width: 767px){
+    .service-block {
+        width: 50%
+    }
+    .service-block > div{
+        padding: 30px;
+    }
+}
+@media only screen and (max-width: 767px){
+    .flex-grid-container > div{
+        padding:4em 2em;
+        width:100%;
+    }
+    .grid-image{
+        height: 50px !important;
+        width: 100%;
+    }
+    .stat-block{
+        width:100%;
+    }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .application-page .flex-grid-container > div:first-child{
+        width:40%;
+    }
+    .application-page .flex-grid-container > div:last-child{
+        width:60%;
+    }
+}
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
+
+}

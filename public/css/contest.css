@@ -1,0 +1,34 @@
+.contest-list-block{
+    padding: 5em;
+    clear: left;
+}
+.contest-item{
+    background-color: #f2f2f2;
+    padding: 15px;
+    margin-bottom: 2em;
+    border-bottom: 1px solid #a2a2a2;
+}
+.contest-item > div{
+    padding: 15px
+}
+.label{
+    padding: 5px 10px;
+    border-radius: 15px;
+}
+.label-small{
+    font-size:12px;
+}
+.contest-image{
+    position: relative;
+}
+.contest-status{
+    position: absolute;
+    top: -5px;
+    left: -5px;
+}
+.contest-image{
+    transition: 0.5s;
+}
+.contest-image:hover{
+    transform: scale(1.08);
+}
