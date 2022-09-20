@@ -1,0 +1,37 @@
+#app{
+    background-color: #454444;
+    min-height: 100vh;
+    /* padding-top: 2em; */
+}
+.card-header{
+    font-size: 28px;
+    color: #f56a6a;
+}
+.navbar-brand{
+    color: #00B6E5 !important;
+    font-weight:bold;
+    font-size: 36px;    
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+}
+/* .navbar-brand > img{
+    transition: 0.5s;
+    -webkit-transition: 0.5s;
+} */
+.navbar-brand:hover{
+    color: #94baf0 !important;
+    transform: scale(1.08) !important;
+    -webkit-transform: scale(1.08) !important;
+}
+.auth-content{
+    border: 1px solid #fff;
+    padding: 2em 2.5em;
+    color: #fff;
+}
+.form-control, .form-control:focus{
+    background-color: rgba(0,0,0,0);
+    color: #d9d9d9
+}
+.link-text, .link-text:hover{
+    color: #94baf0
+}

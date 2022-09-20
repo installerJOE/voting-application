@@ -32,7 +32,8 @@
 
     <!-- Styles -->
     <!------------------------------------------------------------------------------------------------------>
-    <link href="{{ asset('css/index.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/auth.css') }}" rel="stylesheet">
     <link href="{{URL::asset('/images/logo-icon.png')}}" type="image/x-icon" rel="shortcut icon"> 
 
      <!--All meta contents of existing page-->
@@ -41,23 +42,7 @@
     <!------------------------------------------------------------------------------------------------------>
 
     <style>
-        .card-header{
-            font-size: 28px;
-            color: #f56a6a;
-        }
-        .navbar-brand{
-            color: #9e37e7 !important;
-            font-weight:bold;
-            font-size: 24px;    
-        }
-        .navbar-brand > img{
-            transition: 0.5s;
-            -webkit-transition: 0.5s;
-        }
-        .navbar-brand > img:hover{
-            transform: scale(1.12) !important;
-            -webkit-transform: scale(1.12) !important;
-        }
+        
     </style>
 </head>
 <body>
@@ -70,9 +55,17 @@
                 </a>
             </div>
             @include('includes.messages')
-            @yield('content')
+            <div class="col-md-8 col-lg-8 col-sm-10 col-12 margin-auto auth-content">
+                <h1 class="text-center text-peach caption-header">
+                    @yield('auth-title')
+                </h1>
+                <div class="mt-1">
+                    @yield('content')
+                </div>
+            </div>
         </div>
     </div>
+    
     @if($errors->any() || session('info') || session('error') || session('success'))
         <script>
             $(document).ready(function(){
