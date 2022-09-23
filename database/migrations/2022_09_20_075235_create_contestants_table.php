@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('contest_id')->constrained('contests')->onDelete('cascade');
             $table->string('name');
+            $table->integer('contestant_number');
             $table->text('profile_overview');
-            $table->timestamp('start_at');
-            $table->timestamp('end_at');
+            $table->integer('position')->nullable();
             $table->timestamps();
         });
     }

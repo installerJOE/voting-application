@@ -26,6 +26,9 @@ small{
 .submenu-less-div-content{
     padding: 2em 3em;
 }
+.content-body{
+    padding: 2em;
+}
 .content-body div{
     font-family: inherit;
 }
@@ -53,7 +56,7 @@ small{
     width: 100%;
 }
 .analytics-card p{
-    font-size: 12px
+    font-size: 14px
 }
 .analytics-card h1{
     margin:0px;
@@ -128,7 +131,9 @@ small{
     font-size: 12px;
     margin-bottom: 10px
 }
-
+.profile-basic-data h1{
+    margin-top: 0.2em 
+}
 /* Styling of modals */
 .modal-content p{
     margin-bottom: 0px

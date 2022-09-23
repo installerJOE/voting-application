@@ -32,3 +32,6 @@
 .contest-image:hover{
     transform: scale(1.08);
 }
+.contest-card > div{
+    padding: 2em;
+}

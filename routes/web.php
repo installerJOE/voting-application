@@ -27,5 +27,28 @@ Route::controller(App\Http\Controllers\PublicPagesController::class)->group(func
 
 Auth::routes(['verify' => true]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('user.dashboard');
-Route::get('/admin/dashboard', [App\Http\Controllers\HomeController::class, 'index'])->name('admin.dashboard');
+Route::group(['middleware' => ['auth', 'verified']], function(){
+    Route::controller(App\Http\Controllers\UsersController::class)->group(function(){
+        Route::get('/settings/profile', 'profile')->name('user.profile');
+        Route::post('/settings/profile/picture', 'updateProfileImage')->name('user.updateProfileImage');
+        Route::post('/settings/profile/bio-data', 'updateBioData')->name('user.updateBioData');
+        Route::get('/settings/security', 'security')->name('user.security');
+        Route::post('/settings/security', 'updatePassword')->name('users.updatePassword');
+    });
+
+    Route::controller(App\Http\Controllers\AdminController::class)->group(function(){
+        Route::get('/admin/dashboard', 'dashboard')->name('admin.dashboard');
+        Route::get('/admin/contests', 'contests')->name('admin.contests');
+        Route::get('/admin/contests/create', 'createNewContest')->name('admin.createNewContest');
+        Route::post('/admin/contests', 'storeContest')->name('admin.storeContest');
+        Route::get('/admin/contests/{slug}', 'showContest')->name('admin.showContest');
+        Route::post('/admin/contests/{contest}', 'endContest')->name('admin.endContest');
+    });
+
+    Route::controller(App\Http\Controllers\ContestantsController::class)->group(function(){
+        Route::get('/contestant/dashboard', 'dashboard')->name('contestant.dashboard');
+    });
+
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('user.dashboard');
+});
+

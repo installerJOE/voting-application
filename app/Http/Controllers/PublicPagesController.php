@@ -25,20 +25,24 @@ class PublicPagesController extends Controller
     }
 
     public function contests(){
-        return view('public.contests');
+        return view('public.contests')->with([
+            "contests" => Contest::all()
+        ]);
     }
 
-    public function showContest(Contest $contest){
+    public function showContest(){
+        // public function showContest($slug){
         return view('public.showContest');
         // return view('public.showContest')->with([
-        //     'contest' => $contest
+        //     "contest" => Contest::where('slug', $slug)->firstOrFail()
         // ]);
     }
 
-    public function showContestant(Contest $contest){
+    public function showContestant(){
+        // public function showContestant($contestant_number){
         return view('public.showContestant');
         // return view('public.showContest')->with([
-        //     'contest' => $contest
+        //     "contestant" => Contestant::where('contestant_number', $contestant_number)->firstOrFail()
         // ]);
     }
 
