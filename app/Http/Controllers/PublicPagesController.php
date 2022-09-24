@@ -30,20 +30,23 @@ class PublicPagesController extends Controller
         ]);
     }
 
-    public function showContest(){
-        // public function showContest($slug){
-        return view('public.showContest');
-        // return view('public.showContest')->with([
-        //     "contest" => Contest::where('slug', $slug)->firstOrFail()
-        // ]);
+    public function showContest($slug){
+        return view('public.showContest')->with([
+            "contest" => Contest::where('slug', $slug)->firstOrFail()
+        ]);
     }
 
-    public function showContestant(){
-        // public function showContestant($contestant_number){
-        return view('public.showContestant');
-        // return view('public.showContest')->with([
-        //     "contestant" => Contestant::where('contestant_number', $contestant_number)->firstOrFail()
-        // ]);
+    public function showContestant($slug, $contestant_number){
+        $contest = Contest::where('slug', $slug)->firstOrFail();
+        $contestant = Contestant::where('contestant_number', $contestant_number)->firstOrFail();
+        
+        if($contest != $contestant->contest){
+            return back()->with('error', 'Sorry, this contestant has been disqualified from this contest');
+        }
+        
+        return view('public.showContestant')->with([
+            "contestant" => $contestant
+        ]);
     }
 
     public function voteContestant(Request $request){

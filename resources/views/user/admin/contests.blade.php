@@ -44,7 +44,7 @@
                         {{$contest->name}}    
                     </h1>
                     <p>
-                        This is a brief description of the contest.
+                        {{$contest->description}} 
                     </p>
                     <p class="mt-1" style="margin-bottom: 0px">
                         <a href="{{route('admin.showContest', ['slug' => $contest->slug])}}" class="btn btn-blue-bg btn-alert-modal">
@@ -53,7 +53,7 @@
                     <p>
                     <p class="contest-status1"> 
                         <span class="{{$contest->vote_end_at > time() ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
-                            {{$contest->vote_end_at > time() ? 'active' : 'closed'}}
+                            {{$contest->voting_status() ?? "n/a"}}
                         </span> 
                     </p>
                 </div>

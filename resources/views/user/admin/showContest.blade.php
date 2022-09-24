@@ -8,6 +8,12 @@
             background-color: #f2f2f2;
             border: 0px;
         }
+        .ctrl-btn{
+            padding: 1em;
+        }
+        .ctrl-btn p{
+            margin: 0px
+        }
     </style>
 @endsection
 
@@ -26,16 +32,41 @@
 <div class="submenu-less-div-content">
     <div class="col-md-12 mt-1 card content-sub-header">
         <h1 class="sub-header text-peach"> 
-            Name of Contest
+            {{$contest->name}}
         </h1>
     </div> 
+
+    <div class="col-md-12 mt-3">
+        <div class="card ctrl-btn">
+            <p>
+                @if($contest->voting_status() !== "active")
+                    @if($contest->registration_status() !== "active")
+                        <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestRegConfirmModal"> 
+                            Start Registration 
+                        </button>
+                    @else
+                        <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestRegConfirmModal"> 
+                            End Registration
+                        </button>
+                        <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestVotingConfirmModal"> 
+                            Start Voting Session
+                        </button>
+                    @endif
+                @else
+                    <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestVotingConfirmModal"> 
+                        End Voting
+                    </button>
+                @endif
+            </p>
+        </div>
+    </div>
 
     <div class="col-md-12 mt-2 analytics-block">
         <div class="col-lg-4 col-md-6 col-sm-6 col-12 analytics-card">
             <div class="card">
                 <p class="text-grey"> Registered Contestants </p>
                 <h1 class="sub-header text-blue"> 
-                    20
+                    {{$contest->contestants->count()}}
                 </h1>
             </div>
         </div>
@@ -44,7 +75,7 @@
             <div class="card">
                 <p class="text-grey"> Total Votes </p>
                 <h1 class="sub-header text-blue"> 
-                    4032
+                    {{$contest->total_votes()}}
                 </h1>
             </div>
         </div>
@@ -53,7 +84,7 @@
             <div class="card">
                 <p class="text-grey"> Registration Status </p>
                 <h1 class="sub-header text-blue"> 
-                    Active
+                    {{$contest->registration_status() ?? "N/A"}}
                 </h1>
             </div>
         </div>
@@ -62,7 +93,7 @@
             <div class="card">
                 <p class="text-grey"> Voting Status </p>
                 <h1 class="sub-header text-blue"> 
-                    Closed  
+                    {{$contest->voting_status() ?? "N/A"}}
                 </h1>
             </div>
         </div>
@@ -71,19 +102,23 @@
             <div class="card">
                 <p class="text-grey"> Highest Votes Per Contestant </p>
                 <h1 class="sub-header text-blue"> 
-                    200
+                    {{$contest->highest_votes() ?? "N/A"}}
                 </h1>
             </div>
         </div>
 
     </div>
-
-    <div class="col-md-12 mt-3">
-        <p>
-            <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestConfirmModal"> 
-                End Contest 
-            </button>
-        </p>
-    </div>
 </div>
+
+@include('user.admin.modals.start-contest-reg-confirm')
+@include('user.admin.modals.end-contest-reg-confirm')
+@include('user.admin.modals.start-contest-voting-confirm')
+@include('user.admin.modals.end-contest-voting-confirm')
+
+<script>
+    function submitConfirmForm(confirmForm){
+        document.querySelector(confirmForm).submit();
+    }
+</script>
+
 @endsection

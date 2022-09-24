@@ -35,13 +35,13 @@
     </a>
 </div>
 <div class="submenu-less-div-content">
-    <div class="col-md-12 mt-1 card content-sub-header">
+    <div class="col-md-12 col-sm-12 col-12 mt-1 card content-sub-header">
         <h1 class="sub-header text-peach"> 
             Create New Contest
         </h1>
     </div> 
 
-    <div class="col-md-12 mt-2">
+    <div class="col-md-12 col-sm-12 col-12 mt-2">
        <form method="POST" action="{{route('admin.storeContest')}}">
             @csrf
             <div class="form-group">
@@ -49,7 +49,7 @@
                 <hr class="sub-header-hr"/>
                 
                 <label> Name of Contest </label>
-                <input type="text" name="contest_name" value="{{old('contest_name')}}" class="form-control" placeholder="e.g. August Break Beauty Contest"/>
+                <input type="text" name="name" value="{{old('name')}}" class="form-control" placeholder="e.g. August Break Beauty Contest"/>
 
                 <label> Description/Overview </label>
                 <textarea class="form-control" name="description" rows="5">{{old('description')}}</textarea>
@@ -82,7 +82,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="date" name="registration_date" value="{{old('registration_date')}}" class="form-control"/>
+                            <input type="date" name="registration_start_date" value="{{old('registration_start_date')}}" class="form-control"/>
                         </td>
                         <td>
                             <input type="number" name="registration_duration" value="{{old('registration_duration')}}" class="form-control" placeholder="e.g. 10"/>
@@ -103,7 +103,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="date" name="voting_date" value="{{old('voting_date')}}" class="form-control"/>
+                            <input type="date" name="voting_start_date" value="{{old('voting_start_date')}}" class="form-control"/>
                         </td>
                         <td>
                             <input type="number" name="voting_duration" value="{{old('voting_duration')}}" class="form-control" placeholder="e.g. 10"/>
