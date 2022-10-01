@@ -25,9 +25,18 @@ class ContestantsController extends Controller
         ]);
     }
     
-    public function showContest($slug){
+    public function showContest($slug, $number){
         $contest = Contest::where('slug', $slug)->firstOrFail();
-        return view('user.contestant.dashboard');
+        $contestant = auth()->user()->contestants()->where('contestant_number', $number)->firstOrFail();
+
+        if($contestant->contest != $contest){
+            return redirect()->route('user.contests')->with([
+                "error" => "Sorry, you are not registered for this contest."
+            ]);
+        }
+        return view('user.contestant.showContest')->with([
+            "contestant" => $contestant
+        ]);
     }
 
     public function registerContest(ContestantRegistration $request){
@@ -61,6 +70,23 @@ class ContestantsController extends Controller
 
         return redirect()->route('contestant.dashboard')->with([
             "success" => "Your application has been submitted successfully."
+        ]);
+    }
+
+    public function updateContestantProfile(Request $request, Contestant $contestant){
+        $this->validate($request, [
+            "profile_overview" => "required"
+        ]);
+
+        $contestant->update([
+            "profile_overview" => $request->input('profile_overview')
+        ]);
+
+        return redirect()->route('user.showContest', [
+            "slug" => $contestant->contest->slug,
+            "number" => $contestant->contestant_number
+        ])->with([
+            "success" => "Profile has been updated successfully."
         ]);
     }
 

@@ -15,11 +15,7 @@
     </style>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        Contests 
-    </h1>
-@endsection
+@section('content-header', 'My Contests')
 
 @section('content-body')
 
@@ -47,7 +43,10 @@
                         {!! Str::words($contestant->profile_overview, 28, ' . . .') !!} 
                     </p>
                     <p class="mt-1" style="margin-bottom: 0px">
-                        <a href="{{route('user.showContest', ['slug' => $contestant->contest->slug])}}" class="btn btn-blue-bg btn-alert-modal">
+                        <a href="{{route('user.showContest', [
+                            'slug' => $contestant->contest->slug, 
+                            'number' => $contestant->contestant_number
+                        ])}}" class="btn btn-blue-bg btn-alert-modal">
                             View    
                         </a>
                     <p>

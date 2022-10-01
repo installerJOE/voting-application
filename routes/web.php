@@ -55,9 +55,10 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
     Route::controller(App\Http\Controllers\ContestantsController::class)->group(function(){
         Route::get('/user/dashboard', 'dashboard')->name('contestant.dashboard');
         Route::get('/user/contests', 'contests')->name('user.contests');
-        Route::get('/user/contests/{slug}', 'showContest')->name('user.showContest');
+        Route::get('/user/contests/{slug}/contestants/{number}', 'showContest')->name('user.showContest');
         Route::get('/user/register-contest', 'register')->name('user.contests.register');
         Route::post('/user/register-contest', 'registerContest')->name('user.contests.registerContest');
+        Route::post('/user/contestants/{contestant}', 'updateContestantProfile')->name('contestant.updateProfile');
     });
 
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('user.dashboard');

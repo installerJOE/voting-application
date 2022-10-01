@@ -12,11 +12,7 @@
     </style>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        Password/Security
-    </h1>
-@endsection
+@section('content-header', 'Password/Security')
 
 @section('content-body')
     <div class="form-field">

@@ -17,11 +17,7 @@
     </style>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        Contests Management
-    </h1>
-@endsection
+@section('content-header', 'Contests Management')
 
 @section('content-body')
 <div class="col-md-12 text-right">

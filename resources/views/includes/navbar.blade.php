@@ -41,13 +41,11 @@
                         </li>
                     @endif
                 @else
-                    @if( in_array(Auth::user()->role == "admin", ["admin", "contestant"]))
                     <li class="nav-item">
-                        <a class="nav-link auth-link" href="{{ Auth::user()->role == "admin" ? route('admin.dashboard') : route('user.dashboard') }}">
+                        <a class="nav-link auth-link" href="{{ Auth::user()->admin !== null ? route('admin.dashboard') : route('contestant.dashboard') }}">
                             Dashboard
                         </a>
                     </li>
-                    @endif
                 @endguest
             </ul>
         </div>

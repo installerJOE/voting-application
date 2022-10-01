@@ -15,11 +15,7 @@
     </style>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        Contests Management
-    </h1>
-@endsection
+@section('content-header', 'Contests Management')
 
 @section('content-body')
 <div class="submenu-less-div-content">
@@ -50,10 +46,15 @@
                         <a href="{{route('admin.showContest', ['slug' => $contest->slug])}}" class="btn btn-blue-bg btn-alert-modal">
                             View/Edit    
                         </a>
+                        @if($contest->voting_status() == null)
+                            <a href="{{route('admin.showContest', ['slug' => $contest->slug])}}" class="btn btn-peach-bg btn-alert-modal">
+                                See Requests
+                            </a>
+                        @endif
                     <p>
                     <p class="contest-status1"> 
-                        <span class="{{$contest->vote_end_at > time() ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
-                            {{$contest->voting_status() ?? "n/a"}}
+                        <span class="{{$contest->vote_end_at > time() && $contest->vote_start_at < time() ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
+                            {{$contest->voting_status() ?? "Voting not started"}}
                         </span> 
                     </p>
                 </div>

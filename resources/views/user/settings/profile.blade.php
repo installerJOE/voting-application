@@ -4,11 +4,7 @@
     <title> Profile | {{config('app.name')}} </title>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        My Profile
-    </h1>
-@endsection
+@section('content-header', 'My Profile')
 
 @section('content-body')
 <section>

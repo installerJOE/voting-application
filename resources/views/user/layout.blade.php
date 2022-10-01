@@ -45,7 +45,9 @@
                 <div class="col-md-9 col-xl-10 col-lg-10 col-sm-12" id="dashboard-content">
                     <div class="col-md-12 col-12 dashboard-header"> 
                         <div class="header-title"> 
-                            @yield('content-header')
+                            <h1 class="header">
+                                @yield('content-header')
+                            </h1>
                         </div>
                         <div class="header-menu-icon"> 
                             <div class="sidebar-toggler" data-bs-target="#sideBarContent" onclick="toggleSideBar()">

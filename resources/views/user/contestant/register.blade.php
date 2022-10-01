@@ -4,11 +4,7 @@
     <title> Register Contest | {{config('app.name')}} </title>
 @endsection
 
-@section('content-header')
-    <h1 class="header">
-        Register Contest
-    </h1>
-@endsection
+@section('content-header', 'Register Contest')
 
 @section('content-body')
 <div class="submenu-less-div-content">
