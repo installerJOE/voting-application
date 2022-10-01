@@ -9,6 +9,14 @@ class Contestant extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'contestant_number',
+        'profile_overview',
+        'user_id',
+        'status',
+    ];
+
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -23,6 +31,40 @@ class Contestant extends Model
 
     public function images(){
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    // upload using cloudinary
+    public function save_image_using_cloudinary($image){
+        $output_file = Image::convertBase64ImageToFile($image);
+        $imageUrl = Cloudinary::upload($output_file, [
+            'folder' => 'voting_app/contestants'
+        ])->getSecurePath(); 
+        parent::save_image($imageUrl);
+        return true;
+    }
+
+    // upload using local driver
+    public function save_image_to_storage($image){
+        $output_file = Image::saveImageToLocal($image, $this);
+        if($output_file["upload_complete"]){
+            $this->save_image($output_file["filename"]);
+            return true;
+        }
+        return false;
+    }
+
+    private function save_image($imageUrl){
+        $this->images()->create([
+            "image_url" => $imageUrl
+        ]);
+    }
+
+    public static function generate_contestant_no(){
+        do {
+            $number = random_int(10000, 99999);   
+        }
+        while (Contestant::where('contestant_number', $number)->first());
+        return $number;
     }
 
 }

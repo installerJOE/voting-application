@@ -69,7 +69,7 @@ p{
 
 /* Styling of texts */
 .text-underlined{
-    text-decoration: underline;
+    text-decoration: underline !important;
 }
 .text-blue{
     color: #00B6E5;
@@ -148,15 +148,26 @@ p{
     color: #6610f2;
     background-color: #fff;
 }
-.btn-orange-bd{
+.btn-peach-bd{
     border: 1px solid #f56a6a;
     background-color: rgba(0,0,0,0);
     color:#f56a6a;
 }
-.btn-orange-bd:hover{
+.btn-peach-bd:hover{
     background-color: #e8e8e8;
     border: 1px solid #e6e6e6;
 }
+.btn-peach-bg{
+    border: 1px solid #f56a6a;
+    background-color:#f56a6a;
+    color:#fff;
+}
+.btn-peach-bg:hover{
+    background-color: rgba(0,0,0,0.005) !important;
+    color: #f56a6a !important;
+    border: 1px solid #f56a6a !important;
+}
+
 .btn-danger-bd{
     border: 1px solid red;
     background-color: rgba(0,0,0,0);
@@ -403,6 +414,23 @@ h1 + .sub-header-hr{
     border:0px;
     opacity: 0.5;
 }
+
+/* Styling for image cropper */
+#cropImageModal img {
+    display: block;
+    max-width: 100%;
+}
+#cropImageModal .preview {
+    overflow: hidden;
+    width: 160px; 
+    height: 160px;
+    margin: 10px;
+    border: 1px solid red;
+}
+#cropImageModal .modal-lg{
+    max-width: 800px !important;
+}
+/* End of styling */
 
 @media only screen and (max-width: 585px){
     .xl-header, .xxl-header{

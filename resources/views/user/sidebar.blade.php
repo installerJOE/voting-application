@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-12 col-12"> 
             <ul class="py-4 sidenav nav nav-pills flex-column mb-0 align-items-center align-items-sm-start" id="menu">
-                @if(Auth::user()->role == "admin")
+                @if(Auth::user()->admin !== null)
                     @include('user.sidebars.admin')
                 @else
                     @include('user.sidebars.contestant')
@@ -27,7 +27,7 @@
                     </a>
                 </li>
 
-                <li>
+                <li class="bd-bottom-light">
                     <a href="{{route('user.security')}}" class="nav-link align-middle {{ Route::is('user.security') ? 'active-link' : 'text-white' }}">
                         <i class="bi-people"></i> 
                         <span class="ms-1 d-sm-inline">
@@ -37,7 +37,7 @@
                 </li>
 
                 <li>
-                    <a class="nav-link align-middle light-bg" href="{{ route('logout') }}" onclick="logOutUser()">
+                    <a class="nav-link align-middle text-light" href="{{ route('logout') }}" onclick="logOutUser()">
                         <span class="ms-1 d-sm-inline">
                             {{ __('Logout') }}
                         </span> 

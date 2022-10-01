@@ -1,7 +1,7 @@
 @extends('user.layout')
 
 @section('meta-content')
-    <title> Contests Management | Admin | {{config('app.name')}} </title>
+    <title> My Contests | {{config('app.name')}} </title>
     <style>
         .contest-card > .card{
             position: relative;
@@ -17,43 +17,47 @@
 
 @section('content-header')
     <h1 class="header">
-        Contests Management
+        Contests 
     </h1>
 @endsection
 
 @section('content-body')
+
 <div class="submenu-less-div-content">
+    <div class="col-md-12 text-right">
+        <a href="{{route('public.contests')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
+            All Contests
+        </a>
+    </div>
     <div class="content-sub-header">
         <h1 class="text-blue sub-header">
-            All Contests
+            My Contests
         </h1>
     </div> 
     <hr class="sub-header-hr"/>
 
-    <div>
-        <a href="{{route('admin.createNewContest')}}" class="btn btn-blue-bd btn-alert-modal">
-            Create New Contest
-        </a>
-    </div>
-
     <div class="mt-2 analytics-block">
-        @forelse($contests as $contest)
+        @forelse($contestants as $contestant)
             <div class="col-md-12 col-sm-12 col-12 contest-card">
                 <div class="card">
                     <h1 class="sub-header text-peach"> 
-                        {{$contest->name}}    
+                        {{$contestant->contest->name}}    
                     </h1>
                     <p>
-                        {!! Str::words($contest->description, 28, ' . . .') !!} 
+                        {!! Str::words($contestant->profile_overview, 28, ' . . .') !!} 
                     </p>
                     <p class="mt-1" style="margin-bottom: 0px">
-                        <a href="{{route('admin.showContest', ['slug' => $contest->slug])}}" class="btn btn-blue-bg btn-alert-modal">
-                            View/Edit    
+                        <a href="{{route('user.showContest', ['slug' => $contestant->contest->slug])}}" class="btn btn-blue-bg btn-alert-modal">
+                            View    
                         </a>
                     <p>
                     <p class="contest-status1"> 
-                        <span class="{{$contest->vote_end_at > time() ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
-                            {{$contest->voting_status() ?? "n/a"}}
+                        <span class="{{$contestant->status == "approved" ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
+                            @if($contestant->approved)
+                                {{$contestant->number_of_votes ?? 0}} vote(s)
+                            @else
+                                {{$contestant->status}}
+                            @endif
                         </span> 
                     </p>
                 </div>
@@ -61,8 +65,8 @@
         @empty
         <div class="col-md-12 col-sm-12 col-12 contest-card">
             <div class="card">
-                <h1 class="sub-header text-peach"> 
-                    No Contest has been added yet
+                <h1 class="caption-header text-peach"> 
+                    You have not registered for any contest yet.
                 </h1>
             </div>
         </div>

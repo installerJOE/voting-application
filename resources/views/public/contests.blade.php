@@ -32,31 +32,31 @@
                 Active Contests
             </h1>
             <hr class="sub-header-hr"/>
-            @for($i=0; $i<5; $i++)
-            <div class="row mt-3 contest-item">
-                <div class="col-lg-4 col-md-4 col-sm-6 col-12 contest-image">
-                    <img src="{{asset('images/contest.jpg')}}" width="100%" height="auto"/>
-                    <p class="contest-status"> 
-                        <span class="{{$i%2 == 0 ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
-                            {{$i%2 == 0 ? 'active' : 'closed'}}
-                        </span> 
-                    </p>
+            @foreach($contests as $contest)
+                <div class="row mt-3 contest-item">
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-12 contest-image">
+                        <img src="{{asset('images/contest.jpg')}}" width="100%" height="auto"/>
+                        <p class="contest-status"> 
+                            <span class="{{$contest->voting_status() == 'active' ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
+                                {{$contest->voting_status() ?? "registration " . $contest->registration_status()}}
+                            </span> 
+                        </p>
+                    </div>
+                    <div class="col-lg-8 col-md-8 col-sm-6 col-12">
+                        <h1 class="text-peach caption-header">
+                            {{$contest->name}}
+                        </h1>
+                        <p>
+                            {!! Str::words($contest->description, 28, ' . . .') !!} 
+                        </p>
+                        <p>
+                            <a href="{{route('public.showContest', ['slug' => $contest->slug])}}" class="btn btn-blue-bd btn-alert-modal">
+                                See more
+                            </a>
+                        </p>
+                    </div>
                 </div>
-                <div class="col-lg-8 col-md-8 col-sm-6 col-12">
-                    <h1 class="text-peach caption-header">
-                        Contest Title 
-                    </h1>
-                    <p>
-                        This is the description of the contest . . .
-                    </p>
-                    <p>
-                        <a href="{{route('public.showContest')}}" class="btn btn-blue-bd btn-alert-modal">
-                            Visit Contest
-                        </a>
-                    </p>
-                </div>
-            </div>
-            @endfor
+            @endforeach
         </div>
     </div>
 @endsection

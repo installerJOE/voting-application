@@ -15,6 +15,7 @@ class Contest extends Model
         'description',
         'contestants_needed',
         'prize',        
+        'updated_by',        
         'registration_start_at',
         'registration_end_at',
         'vote_start_at',

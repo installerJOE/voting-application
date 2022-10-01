@@ -39,18 +39,22 @@
     <div class="col-md-12 mt-3">
         <div class="card ctrl-btn">
             <p>
+                <button type="button" class="btn btn-peach-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestDetailsModal"> 
+                    Edit Contest 
+                </button> &nbsp;
+
                 @if($contest->voting_status() !== "active")
-                    @if($contest->registration_status() !== "active")
+                    @if($contest->registration_status() == null)
                         <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestRegConfirmModal"> 
                             Start Registration 
-                        </button>
+                        </button> &nbsp;
                     @else
                         <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestRegConfirmModal"> 
                             End Registration
-                        </button>
+                        </button> &nbsp;
                         <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestVotingConfirmModal"> 
                             Start Voting Session
-                        </button>
+                        </button> &nbsp;
                     @endif
                 @else
                     <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestVotingConfirmModal"> 
@@ -66,7 +70,7 @@
             <div class="card">
                 <p class="text-grey"> Registered Contestants </p>
                 <h1 class="sub-header text-blue"> 
-                    {{$contest->contestants->count()}}
+                    {{$contest->contestants->count()}}/{{$contest->contestants_needed}}
                 </h1>
             </div>
         </div>
@@ -106,14 +110,39 @@
                 </h1>
             </div>
         </div>
+    </div>
 
+    <div class="col-md-12 mt-1">
+        <h1 class="sub-header text-peach"> 
+            Contest Description/Overview
+        </h1>
+        <hr class="sub-header-hr"/>
+        <p>
+            {!!$contest->description!!}
+        </p>
+    </div> 
+
+    <div class="col-md-12 mt-1">
+        <hr class="sub-header-hr"/>
+        @if($contest->voting_status() !== "active")
+            <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestRegDataModal"> 
+                Change Registration Data
+            </button> &nbsp;
+        
+            <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestVotingDataModal"> 
+                Change Voting Data
+            </button> &nbsp;
+        @endif
     </div>
 </div>
 
+@include('user.admin.modals.edit-contest-details')
 @include('user.admin.modals.start-contest-reg-confirm')
 @include('user.admin.modals.end-contest-reg-confirm')
 @include('user.admin.modals.start-contest-voting-confirm')
 @include('user.admin.modals.end-contest-voting-confirm')
+@include('user.admin.modals.change-contest-voting-date')
+@include('user.admin.modals.change-contest-registration-date')
 
 <script>
     function submitConfirmForm(confirmForm){

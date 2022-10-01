@@ -2,10 +2,13 @@
     <div class="modal-dialog modal-md modal-dialog-centered">  
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="caption-header modal-title text-blue" id="startContestVotingConfirmModalLabel"> 
-                    Are you sure you want to automatically start voting session for this contest?
-                </h2>                    
+            <div class="modal-body">
+                <p class="" id="startContestVotingConfirmModalLabel"> 
+                    Are you sure you want to start voting session for this contest?
+                </p>                    
+                <p class="text-red mt-2">
+                    Note: Registration will end automatically
+                </p>
             </div>
             <form action="{{route('admin.startContestVoting', ['contest' => $contest])}}" method="POST" id="start-contest-voting-form">
                 @csrf                    

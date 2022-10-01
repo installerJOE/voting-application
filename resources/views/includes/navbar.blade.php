@@ -37,28 +37,17 @@
                 @guest
                     @if (Route::has('login'))
                         <li class="nav-item">
-                            <a class="nav-link nav-login" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            <a class="nav-link nav-login auth-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                         </li>
                     @endif
                 @else
-                    <li class="nav-item dropdown">
-                        <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                            {{ Auth::user()->fullname }}
+                    @if( in_array(Auth::user()->role == "admin", ["admin", "contestant"]))
+                    <li class="nav-item">
+                        <a class="nav-link auth-link" href="{{ Auth::user()->role == "admin" ? route('admin.dashboard') : route('user.dashboard') }}">
+                            Dashboard
                         </a>
-
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ Auth::user()->role == "admin" ? route('admin.dashboard') : route('user.dashboard') }}">
-                                Dashboard
-                            </a>
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="logOutUser()">
-                                {{ __('Logout') }}
-                            </a>
-
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                        </div>
                     </li>
+                    @endif
                 @endguest
             </ul>
         </div>

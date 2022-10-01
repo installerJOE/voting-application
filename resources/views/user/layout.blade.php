@@ -74,6 +74,90 @@
                 var sideBar = document.querySelector('#sideBarContent');
                 sideBar.classList.toggle('showSideBar')
             }
+
+            function submitModalForm(formId){
+                document.getElementById(formId).submit();
+            }
+            
+            // var imageToDisplay; 
+            var imageDivBlock;
+            var base64IimageInput;
+            var $modal; 
+            var cropper;
+
+            function showImageCropper(e, imageBlock, imageRatio){
+                var image = document.getElementById('original_image');
+                $modal = $('#cropImageModal');
+                e = e || window.event;
+                
+                var files = e.target.files;
+                var done = url => {
+                    image.src = url;
+                    $modal.modal('show');
+                };
+            
+                var reader; var file; var url;
+                if (files && files.length > 0) {
+                    file = files[0];
+                    if (URL) {
+                        done(URL.createObjectURL(file));
+                    } 
+                    else if (FileReader) {
+                        reader = new FileReader();
+                        reader.onload = function (e) {
+                            done(reader.result);
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                }
+                imageDivBlock = imageBlock;
+
+                $modal.on('shown.bs.modal', function () {
+                    if(cropper != null){
+                        cropper.destroy();
+                        cropper = null; 
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: imageRatio,
+                        viewMode: 2,
+                        preview: '.preview',
+                        zoomOnWheel: true,
+                        scalable: true,
+                    });
+                    console.log(cropper)
+                }).on('hidden.bs.modal', function () {
+                    cropper.destroy();
+                    cropper = null;
+                });
+            }    
+        
+            function closeImageCropperModal(){
+                let canvas = cropper.getCroppedCanvas({
+                    Width: 256,
+                    Height: 256,
+                });
+                console.log(canvas)
+                canvas.toBlob(function(blob) {
+                    var reader = new FileReader();
+                    reader.readAsDataURL(blob); 
+                    reader.onloadend = function() {
+                        var base64data = reader.result; 
+                        
+                        // assign image value to form input
+                        $(imageDivBlock + " > .base64image").val(base64data);
+            
+                        //display image on the frontend
+                        document.querySelector(imageDivBlock + ' > .image-container').style.display = "block"
+                        document.querySelector(imageDivBlock + ' > .image-container > img').src = base64data;
+
+                        // close modal and submit form
+                        $modal.modal('hide');
+                    }
+                });
+            }
         </script>
+
+        @include('user.modals.crop-image')
+
     </body>
 </html>

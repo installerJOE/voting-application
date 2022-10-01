@@ -81,6 +81,7 @@ class AdminController extends Controller
             "registration_end_at" => $reg_end_date,
             "vote_start_at" => $voting_start_date,
             "vote_end_at" => $this->calculateEndDate($voting_start_date, $voting_duration),
+            "updated_by" => auth()->user()->id
         ]);
 
         return redirect()->route('admin.contests')->with([
@@ -98,6 +99,7 @@ class AdminController extends Controller
         $contest->update([
             "registration_start_at" => Carbon::now(),
             "registration_end_at" => $this->calculateEndDate(Carbon::now(), $contest->registration_duration()),
+            "updated_by" => auth()->user()->id,
         ]);
 
         $message = "Contest registration has been started successfully";
@@ -107,6 +109,7 @@ class AdminController extends Controller
     public function endContestReg(Contest $contest){
         $contest->update([
             "registration_end_at" => Carbon::now(),
+            "updated_by" => auth()->user()->id,
         ]);
 
         $message = "Contest registration has been ended successfully";
@@ -118,14 +121,17 @@ class AdminController extends Controller
             $message = "You have not started registration yet";
             return $this->redirectRoute($contest, $message);
         }
-
+        
         if($contest->registration_status() == "active"){
-            $contest->registration_end_at = Carbon::now();
+            $contest->update([
+                "registration_end_at" => Carbon::now()
+            ]);
         }
-        $contest->vote_start_at = Carbon::now();
-        $contest->registration_end_at = $this->calculateEndDate(Carbon::now(), $contest->voting_duration());
-        $contest->save();
-
+        $contest->update([
+            "vote_start_at" => Carbon::now(),
+            "updated_by" => auth()->user()->id,
+        ]);
+        
         // send notification to contestants
         // foreach($contest->contestants as $contestant){
         //     Mail::to($contestant->user->email)->send(new ContestVotingStartedMail($contestant));
@@ -149,10 +155,11 @@ class AdminController extends Controller
         }
 
         $contest->update([
-            "vote_end_at" => Carbon::now()
+            "vote_end_at" => Carbon::now(),
+            "updated_by" => auth()->user()->id
         ]);
 
-        $message = "Voting has been started  for this contest  successfully";
+        $message = "You have successfully ended voting for this contest.";
         return $this->redirectRoute($contest, $message);
     }
 
@@ -160,5 +167,35 @@ class AdminController extends Controller
         return redirect()->route('admin.showContest', ['slug' => $contest->slug])->with([
             "success" => $message
         ]);
+    }
+
+    public function updateContestBaseData(Request $request, Contest $contest){
+        $this->validate($request, [
+            "description" => "required|min:10",
+            "prize" => "required",
+            "number_of_contestants" => "required|integer",
+        ]);
+
+        if($request->input('name') !== $contest->name) $this->validate($request, [
+            "name" => "required|max:255|min:4|unique:contests",
+        ]);
+
+        $contest->update([
+            "name" => $request->input('name'),
+            "slug" => Str::slug($request->input('name')),
+            "description" => $request->input('description'),
+            "contestants_needed" => $request->input('number_of_contestants'),
+            "prize" => $request->input('prize'),        
+        ]);
+        
+        $message = "The contest has been updated successfully";
+        return $this->redirectRoute($contest, $message);
+    }
+
+    public function addUserToAdmin(User $user){
+        $user->admin()->create([
+            "super_admin" => false
+        ]);
+        return redirect()->route('admin.dashboard')->with("success", "$user->name has been given admin privileges successfully");
     }
 }

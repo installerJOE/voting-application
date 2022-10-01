@@ -13,13 +13,20 @@
     padding: 1em 10px;
     font-size:14px;
 }
+.sidenav .nav-link:hover{
+    background-color: #424242;
+}
 .sidenav li{
     width: 100%;
     padding:0px;
     padding-top:5px;
 }
 .sidenav .active-link{
-    background-color: #412e60;
+    background-color: #412e60 !important;
+    color: #fff !important;
+}
+.bd-bottom-light{
+    border-bottom: 1px solid #626262;
 }
 .menu-content{
     /* overflow: auto; */

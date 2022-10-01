@@ -25,13 +25,25 @@ class PublicPagesController extends Controller
     }
 
     public function contests(){
+        $active_contests = [];
+        foreach(Contest::all() as $contest){
+            if($contest->registration_status() !== null){
+                $active_contests[] = $contest;
+            }
+        }
         return view('public.contests')->with([
-            "contests" => Contest::all()
+            "contests" => $active_contests
         ]);
     }
 
     public function showContest($slug){
         return view('public.showContest')->with([
+            "contest" => Contest::where('slug', $slug)->firstOrFail()
+        ]);
+    }
+
+    public function contestRegistration($slug){
+        return view('public.registerContest')->with([
             "contest" => Contest::where('slug', $slug)->firstOrFail()
         ]);
     }
