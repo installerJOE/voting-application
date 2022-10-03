@@ -54,8 +54,7 @@ class PublicPagesController extends Controller
         
         if($contest != $contestant->contest){
             return back()->with('error', 'Sorry, this contestant has been disqualified from this contest');
-        }
-        
+        }        
         return view('public.showContestant')->with([
             "contestant" => $contestant
         ]);

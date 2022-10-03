@@ -432,6 +432,12 @@ h1 + .sub-header-hr{
 }
 /* End of styling */
 
+.modal-hr{
+    margin-top:0px;
+    background-color: #a9a9a9;
+    border-color: #a9a9a9;
+}
+
 @media only screen and (max-width: 585px){
     .xl-header, .xxl-header{
         font-size: 40px;

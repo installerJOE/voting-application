@@ -47,14 +47,14 @@
                             View/Edit    
                         </a>
                         @if($contest->voting_status() == null)
-                            <a href="{{route('admin.showContest', ['slug' => $contest->slug])}}" class="btn btn-peach-bg btn-alert-modal">
+                            <a href="{{route('admin.contests.showContestRequests', ['slug' => $contest->slug])}}" class="btn btn-peach-bg btn-alert-modal">
                                 See Requests
                             </a>
                         @endif
                     <p>
                     <p class="contest-status1"> 
                         <span class="{{$contest->vote_end_at > time() && $contest->vote_start_at < time() ? 'bg-green' : 'bg-peach'}} text-white label label-small"> 
-                            {{$contest->voting_status() ?? "Voting not started"}}
+                            {{$contest->contestants->count() . '/' . $contest->contestants_needed}}
                         </span> 
                     </p>
                 </div>

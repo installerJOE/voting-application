@@ -8,7 +8,9 @@
                 </h2>                    
             </div>
             <div class="modal-body"> 
-                <form action="{{route('public.voteContestant')}}" method="POST" id="vote-contestant-form">
+                <form action="{{route('public.voteContestant', [
+                    'slug' => $contestant->contest->slug, 'contestant_number' => $contestant->contestant_number
+                ])}}" method="POST" id="vote-contestant-form">
                     @csrf
                     <label> Username </label>
                     <input type="text" class="form-control" name="username" value="{{old('username')}}" placeholder="e.g. JohndoeMan" required>

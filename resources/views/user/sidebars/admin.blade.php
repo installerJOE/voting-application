@@ -8,7 +8,7 @@
 </li>
 
 <li>
-    <a href="{{route('admin.contests')}}" class="nav-link align-middle {{ Route::is('admin.contests') ? 'active-link' : 'text-white' }}">
+    <a href="{{route('admin.contests.overview')}}" class="nav-link align-middle {{ Route::is('admin.contests.*') || Route::is('admin.showContest') ? 'active-link' : 'text-white' }}">
         <i class="bi-people"></i> 
         <span class="ms-1 d-sm-inline">
             Contests

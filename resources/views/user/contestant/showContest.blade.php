@@ -75,11 +75,13 @@
         <p> {{$contestant->profile_overview}} </p>
     </div>
 
-    <div class="mt-2">
-        <button type="button" class="btn btn-alert-modal btn-peach-bg" data-bs-toggle="modal" data-bs-target="#editContestantProfileModal">
-            Edit Profile
-        </button>
-    </div>
+    @if($contestant->contest->registration_status() == "active")
+        <div class="mt-2">
+            <button type="button" class="btn btn-alert-modal btn-peach-bg" data-bs-toggle="modal" data-bs-target="#editContestantProfileModal">
+                Edit Profile
+            </button>
+        </div>
+    @endif
 </div>
 
 @include('user.modals.edit-contestant-profile')

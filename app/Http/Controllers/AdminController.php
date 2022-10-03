@@ -35,6 +35,13 @@ class AdminController extends Controller
         ]);
     }
 
+    public function showContestRequests($slug){
+        $contest = Contest::where('slug', $slug)->firstOrFail();
+        return view('user.admin.contest-requests')->with([
+            "contest" => $contest
+        ]);
+    }
+
     public function createNewContest(){
         return view('user.admin.create-contest');
     }
@@ -49,17 +56,14 @@ class AdminController extends Controller
             "registration_duration" => "required",
             "voting_start_date" => "required",
             "voting_duration" => "required",
+            "amount_per_vote" => "required",
         ]);
         
-
-        $reg_start_date = $request->input('registration_start_date');
-        $reg_duration = $request->input('registration_duration');
-        $reg_end_date = $this->calculateEndDate($reg_start_date, $reg_duration);
+        $reg_start_date = Carbon::parse(date($request->input('registration_start_date')));
+        $voting_start_date = Carbon::parse(date($request->input('voting_start_date')));
+        $reg_end_date = Carbon::parse(date($request->input('registration_start_date')))->addDays($request->input('registration_duration'));
         
-        $voting_start_date = $request->input('voting_start_date');
-        $voting_duration = $request->input('voting_duration');
-
-        if(strtotime(now()) > strtotime($reg_start_date)){
+        if(time() > strtotime($reg_start_date)){
             return back()->withInput($request->input())->with([
                 "error" => "Registration date must be ahead of today",
             ]);
@@ -67,7 +71,7 @@ class AdminController extends Controller
 
         if(strtotime($voting_start_date) < strtotime($reg_end_date)){
             return back()->withInput($request->input())->with([
-                "error" => "Please adjust the Voting Start Date to a date that comes after contest registration period",
+                "error" => "Please adjust the 'voting start date' to a date that comes after contest registration period",
             ]);
         }
         
@@ -77,28 +81,23 @@ class AdminController extends Controller
             "description" => $request->input('description'),
             "contestants_needed" => $request->input('number_of_contestants'),
             "prize" => $request->input('prize'),        
-            "registration_start_at" => $reg_start_date,
+            "amount_per_vote" => $request->input('amount_per_vote'),        
+            "registration_start_at" => $reg_start_date->format('Y-m-d H:i:s'),
             "registration_end_at" => $reg_end_date,
-            "vote_start_at" => $voting_start_date,
-            "vote_end_at" => $this->calculateEndDate($voting_start_date, $voting_duration),
+            "vote_start_at" => $voting_start_date->format('Y-m-d H:i:s'),
+            "vote_end_at" => $voting_start_date->addDays($request->input('voting_duration')),
             "updated_by" => auth()->user()->id
         ]);
 
-        return redirect()->route('admin.contests')->with([
+        return redirect()->route('admin.contests.overview')->with([
             "success" => "Contest has been created successfully"
         ]);
-    }
-
-    private function calculateEndDate($start_date, $duration_in_days){
-        $timestamp = strtotime($start_date) + ($duration_in_days * 24 * 60 * 60);
-        $end_date = date('Y-m-d H:i:s', $timestamp-1);
-        return $end_date;
     }
 
     public function startContestReg(Contest $contest){
         $contest->update([
             "registration_start_at" => Carbon::now(),
-            "registration_end_at" => $this->calculateEndDate(Carbon::now(), $contest->registration_duration()),
+            "registration_end_at" => Carbon::now()->addDays($contest->registration_duration()),
             "updated_by" => auth()->user()->id,
         ]);
 
@@ -186,10 +185,65 @@ class AdminController extends Controller
             "description" => $request->input('description'),
             "contestants_needed" => $request->input('number_of_contestants'),
             "prize" => $request->input('prize'),        
+        ]);        
+        return $this->redirectRoute($contest, "Base data of contest has been updated successfully");
+    }
+
+    public function updateContestRegData(){
+        $this->validate($request, [
+            "registration_duration" => "required|integer",
+            "reg_start_date" => "required",
         ]);
         
-        $message = "The contest has been updated successfully";
-        return $this->redirectRoute($contest, $message);
+        $reg_starting_date = Carbon::parse(date($request->input('reg_start_date')));
+        if(time() > strtotime($reg_starting_date)) {
+            return back()->withInput($request->input())->with([
+                "error" => "Registration start date must not be a past date."
+            ]);
+        }
+
+        $contest->update([
+            "registration_start_at" => $reg_starting_date->format('Y-m-d H:i:s'),
+            "registration_end_at" => $reg_starting_date->addDays($request->input('voting_duration')),
+        ]);
+        
+        return $this->redirectRoute($contest, "Registration information of this contest has been updated successfully");
+    }
+
+    public function updateContestVotingData(Request $request, Contest $contest){
+        $this->validate($request, [
+            "amount_per_vote" => "required|numeric",
+            "voting_duration" => "required|integer",
+            "voting_start_date" => "required",
+        ]);
+        
+        $voting_starting_date = Carbon::parse(date($request->input('voting_start_date')));
+        if(strtotime($contest->registration_end_at) > strtotime($voting_starting_date)) {
+            return back()->withInput($request->input())->with([
+                "error" => "Voting start date must be after registration end date"
+            ]);
+        }
+
+        $contest->update([
+            "amount_per_vote" => $request->input('amount_per_vote'),     
+            "vote_start_at" => $voting_starting_date->format('Y-m-d H:i:s'),
+            "vote_end_at" => $voting_starting_date->addDays($request->input('voting_duration')),
+        ]);
+        
+        return $this->redirectRoute($contest, "Voting information of this contest has been updated successfully");
+    }
+
+    public function acceptContestant(Request $request, $slug){
+        $contest = Contest::where('slug', $slug)->firstOrFail();
+        $this->validate($request, [
+            "contestant_id" => "required"
+        ]);
+
+        $contestant = $contest->contestants()->where('id', $request->input('contestant_id'))->first()->update([
+            "status" => "accepted"
+        ]);
+
+        return back()->with('success', 'Contestant has been accepted successfully.');
     }
 
     public function addUserToAdmin(User $user){

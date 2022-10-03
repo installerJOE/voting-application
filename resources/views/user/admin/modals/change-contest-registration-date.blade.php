@@ -11,11 +11,11 @@
                 <form action="{{route('admin.contests.updateContestBaseData', ['contest' => $contest])}}" method="POST" id="change-contest-reg-data-form">
                     @csrf
                     <label>  Start Date </label> 
-                    <input type="date" name="registration_start_date" value="{{old('registration_start_date') ?? $contest->registration_start_at}}" 
+                    <input type="date" name="registration_start_date" value="{{old('registration_start_date') ??  \Illuminate\Support\Carbon::parse($contest->registration_start_at)->format('Y-m-d')}}"
                         class="form-control" {{$contest->registration_status() == "active" ? "disabled" : ""}}/>
 
                     <label> Duration of Registration (Days) </label> 
-                    <input type="number" name="registration_duration" value="{{old('registration_duration') ?? $contest->voting_duration()}}" class="form-control" placeholder="e.g. 10"/>    
+                    <input type="number" name="registration_duration" value="{{old('registration_duration') ?? $contest->registration_duration()}}" class="form-control" placeholder="e.g. 10"/>    
                 </form>
             </div>
             <div class="modal-footer" style="text-align:left">

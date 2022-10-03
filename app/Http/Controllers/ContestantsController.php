@@ -68,7 +68,7 @@ class ContestantsController extends Controller
             if(!$imageUploaded) return $this->redirectOnImageError();
         }
 
-        return redirect()->route('contestant.dashboard')->with([
+        return redirect()->route('user.contests')->with([
             "success" => "Your application has been submitted successfully."
         ]);
     }

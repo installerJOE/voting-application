@@ -46,9 +46,11 @@
                         <input type="hidden" name="contest_slug" value="{{request()->get('contest')}}"/>
                     @else
                         @foreach ($contests as $contest)
-                            <option value="{{$contest->slug}}">
-                                {{$contest->name}}
-                            </option>
+                            @if(Auth::user()->contestants()->where('contest_id', $contest->id)->first() === null)
+                                <option value="{{$contest->slug}}">
+                                    {{$contest->name}}
+                                </option>
+                            @endif
                         @endforeach
                     @endif
                 </select>

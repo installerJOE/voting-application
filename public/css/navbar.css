@@ -75,4 +75,9 @@
 }
 .auth-link{
     background-color: #63bed4;
+    border: 1.3px solid #63bed4;
+}
+.auth-link:hover{
+    background-color: rgba(0,0,0,0);
+    color: #63bed4;
 }

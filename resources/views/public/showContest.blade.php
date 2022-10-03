@@ -51,8 +51,10 @@
                 <div class="row mt-3 contest-item">
                     @forelse($contest->contestants as $contestant)
                         <div class="col-lg-3 col-md-3 col-sm-4 col-6 contest-image">
-                            <a href="{{route('public.showContestant')}}">
-                                <img src="{{asset('images/contest.jpg')}}" width="100%" height="auto"/>
+                            <a href="{{route('public.showContestant', [
+                                'slug' => $contest->slug, 'contestant_number' => $contestant->contestant_number
+                            ])}}">
+                                <img src="{{asset('images/contestants/' . $contestant->images()->first()->image_url)}}" width="100%" height="auto"/>
                                 <p class="contest-status"> 
                                     <span class="bg-peach text-white label label-small"> 
                                         {{$contestant->number_of_votes}} votes
@@ -60,7 +62,7 @@
                                 </p>
                                 <p class="contestant-name"> 
                                     <span class=""> 
-                                        {{$contestant->name}}
+                                        #{{$contestant->contestant_number}}
                                     </span> 
                                 </p>
                             </a>

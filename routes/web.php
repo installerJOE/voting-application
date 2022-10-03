@@ -19,6 +19,7 @@ Route::controller(App\Http\Controllers\PublicPagesController::class)->group(func
     Route::get('/contact', 'contact')->name('public.contact');
     Route::get('/contests', 'contests')->name('public.contests');
     Route::get('/contests/{slug}', 'showContest')->name('public.showContest');
+    Route::get('/contests/{slug}/contestants/{contestant_number}', 'showContestant')->name('public.showContestant');
     Route::post('/contests/{slug}/contestants/{contestant_number}/vote', 'voteContestant')->name('public.voteContestant');
     Route::post('/newsletter/subscribe', 'subscribeNewsletter')->name('public.subscribeNewsletter');
 });
@@ -36,23 +37,26 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
 
     Route::middleware(['admin'])->controller(App\Http\Controllers\AdminController::class)->group(function(){
         Route::get('/admin/dashboard', 'dashboard')->name('admin.dashboard');
-        Route::get('/admin/contests', 'contests')->name('admin.contests');
+        Route::get('/admin/contests', 'contests')->name('admin.contests.overview');
         Route::get('/admin/contests/create', 'createNewContest')->name('admin.createNewContest');
-        Route::post('/admin/contests', 'storeContest')->name('admin.storeContest');
         Route::get('/admin/contests/{slug}', 'showContest')->name('admin.showContest');
+        Route::get('/admin/contests/{slug}/requests', 'showContestRequests')->name('admin.contests.showContestRequests');
+
+        Route::post('/admin/contests', 'storeContest')->name('admin.storeContest');
         Route::post('/admin/contests/{contest}', 'updateContestBaseData')->name('admin.contests.updateContestBaseData');
+        Route::post('/admin/contests/{contest}/update-voting-data', 'updateContestVotingData')->name('admin.contests.updateContestVotingData');
+
         Route::post('/admin/contests/{contest}/start-registration', 'startContestReg')->name('admin.startContestReg');
         Route::post('/admin/contests/{contest}/end-registration', 'endContestReg')->name('admin.endContestReg');
         Route::post('/admin/contests/{contest}/start-voting', 'startContestVoting')->name('admin.startContestVoting');
         Route::post('/admin/contests/{contest}/end-voting', 'endContestVoting')->name('admin.endContestVoting');
         
-        // Route::get('/admin/contests/{slug}/register', 'registerForContest')->name('user.registerForContest');
-        // Route::post('/admin/contests/{slug}/register', 'submitContestRegistration')->name('user.submitContestRegistration');
+        Route::post('/admin/contests/{slug}/requests', 'acceptContestant')->name('admin.contests.acceptContestant');
         
         // Route::post('/users/{user}/assign-admin', 'addUserToAdmin')->name('admin.addUserToAdmin');
     });
 
-    Route::controller(App\Http\Controllers\ContestantsController::class)->group(function(){
+    Route::middleware(['user'])->controller(App\Http\Controllers\ContestantsController::class)->group(function(){
         Route::get('/user/dashboard', 'dashboard')->name('contestant.dashboard');
         Route::get('/user/contests', 'contests')->name('user.contests');
         Route::get('/user/contests/{slug}/contestants/{number}', 'showContest')->name('user.showContest');

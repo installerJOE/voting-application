@@ -21,7 +21,7 @@
 
 @section('content-body')
 <div class="col-md-12 text-right">
-    <a href="{{route('admin.contests')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
+    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
         Back to Contests
     </a>
 </div>
@@ -103,6 +103,15 @@
                 <p class="text-grey"> Highest Votes Per Contestant </p>
                 <h1 class="sub-header text-blue"> 
                     {{$contest->highest_votes() ?? "N/A"}}
+                </h1>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 col-sm-6 col-12 analytics-card">
+            <div class="card">
+                <p class="text-grey"> Amount Per Vote (NGN) </p>
+                <h1 class="sub-header text-blue"> 
+                    {{$contest->amount_per_vote ?? 0}}
                 </h1>
             </div>
         </div>

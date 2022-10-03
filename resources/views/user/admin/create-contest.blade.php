@@ -26,7 +26,7 @@
 
 @section('content-body')
 <div class="col-md-12 text-right">
-    <a href="{{route('admin.contests')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
+    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
         Back to Contests
     </a>
 </div>
@@ -103,6 +103,14 @@
                         </td>
                         <td>
                             <input type="number" name="voting_duration" value="{{old('voting_duration')}}" class="form-control" placeholder="e.g. 10"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td> <label> Amount Per Vote (NGN) </label> </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="number" name="amount_per_vote" value="{{old('amount_per_vote')}}" class="form-control" placeholder="e.g. 50" required/>
                         </td>
                     </tr>
                 </table>

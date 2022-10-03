@@ -12,7 +12,9 @@
             <!-- Right Side Of Navbar -->
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a href="{{ route('public.showContest') }}" class="nav-link {{Route::is('public.showContest') ? 'active-nav-link' : 'text-white'}}">
+                    <a href="{{ route('public.showContest', [
+                        'slug' => $contestant->contest->slug
+                    ]) }}" class="nav-link {{Route::is('public.showContest') ? 'active-nav-link' : 'text-white'}}">
                         {{ __('Back to Contest') }}
                     </a>
                 </li>                

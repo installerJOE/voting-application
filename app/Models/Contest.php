@@ -20,6 +20,7 @@ class Contest extends Model
         'registration_end_at',
         'vote_start_at',
         'vote_end_at',
+        'amount_per_vote'
     ];
 
     public function admin(){
