@@ -11,16 +11,16 @@
                 <form action="{{route('user.updateBioData')}}" method="POST" id="update-biodata-form">
                     @csrf
                     <label> Full Name </label>
-                    <input type="text" class="form-control" name="name" placeholder="e.g. Joe" value="{{old('name') ?? Auth::user()->name}}">
+                    <input type="text" class="form-control" name="name" placeholder="e.g. Joe Mike" value="{{old('name') ?? Auth::user()->name}}">
 
-                    {{-- <label> Date of Birth </label>
-                    <input type="date" class="form-control" name="date_of_birth" value="{{Auth::user()->date_of_birth}}"> --}}
+                    <label> Username </label>
+                    <input type="text" class="form-control" name="username" placeholder="e.g. joemikky" value="{{old('username') ?? Auth::user()->username}}">
 
-                    <label> Gender </label>
+                    {{-- <label> Gender </label>
                     <select class="form-control" name="gender">
                         <option value="male"> Male </option>
                         <option value="female"> Female </option>
-                    </select>
+                    </select> --}}
 
                     <label> Phone Contact </label>
                     <input type="text" class="form-control" name="phone_number" value="{{old('phone_number') ?? Auth::user()->phone_number}}" placeholder="e.g. +234 80 2992 3948">

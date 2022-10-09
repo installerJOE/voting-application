@@ -12,6 +12,7 @@ class Image extends Model
 
     protected $fillable = [
         'image_url',
+        'cover_image'
     ];
 
     protected $hidden = [
@@ -37,13 +38,13 @@ class Image extends Model
         return $output_file;
     }
 
-    public static function saveImageToLocal($image, $contestant){
+    public static function saveImageToLocal($image, $filename){
         if(preg_match('/^data:image\/(\w+);base64,/', $image)){
             $data = substr($image, strpos($image, ',') + 1);
             $decoded_image = base64_decode($data);            
 
             // store image in folder
-            $filename = strtolower($contestant->name . '-' . time() . '.jpg');
+            $filename = strtolower($filename . '-' . time() . '.jpg');
             Storage::disk('contestant')->put($filename, $decoded_image);
             return [
                 "upload_complete" => true,

@@ -17,6 +17,13 @@
             top: 0px;
             left: 0px;
         }
+        .sponsorship-footer{
+            padding: 2em;
+            margin-bottom: 5em;
+            border:0px;
+            background-color: #000;
+            text-align: center;
+        }
     </style>  
 @endsection
 
@@ -105,9 +112,28 @@
                         </p>
                     @endguest
                 </div>
+            @elseif($contest->registration_status() == "closed" && $contest->voting_status() == null)
+                <div>
+                    <h1 class="text-peach sub-header mt-2">
+                        Registration Is Close!
+                    </h1>
+                    <hr class="sub-header-hr"/>
+                    <p>
+                        Stay tuned as voting for this contest/competition will commence soon! You may 
+                        <span class="text-peach link-text" data-bs-toggle="modal" data-bs-target="#signUpToNewsletterModal"> 
+                            sign up to our newsletter 
+                        </span>
+                        so as to be among the first to be notified when the competition begins or when there
+                        is another contest.
+                    </p>
+                </div>
             @else
-
             @endif
         </div>
     </div>
+    <div class="col-md-9 col-sm-9 col-12 margin-auto">
+        @include('includes.sponsor')
+    </div>
+
+    @include('public.modals.sign-up-to-newsletter')
 @endsection

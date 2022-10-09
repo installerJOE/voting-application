@@ -86,7 +86,7 @@
                         <img height="100px" width="auto"/>
                     </div>
                     <input type="file" class="form-control" onchange="showImageCropper(event, '#cover_image', 16/9)" required/>
-                    <input type="hidden" class="base64image" name="cover_image" value="{{old('cover_image1')}}" required/>
+                    <input type="hidden" class="base64image" name="cover_image" value="{{old('cover_image')}}" required/>
                 </div>
 
                 <div class="form-group" id="secondary_image">

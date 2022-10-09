@@ -22,6 +22,7 @@ Route::controller(App\Http\Controllers\PublicPagesController::class)->group(func
     Route::get('/contests/{slug}/contestants/{contestant_number}', 'showContestant')->name('public.showContestant');
     Route::post('/contests/{slug}/contestants/{contestant_number}/vote', 'voteContestant')->name('public.voteContestant');
     Route::post('/newsletter/subscribe', 'subscribeNewsletter')->name('public.subscribeNewsletter');
+    Route::post('/contests/{contest}/sponsorship/send-request', 'sendSponsorshipRequest')->name('public.sendSponsorshipRequest');
 });
 
 Auth::routes(['verify' => true]);
@@ -29,8 +30,8 @@ Auth::routes(['verify' => true]);
 Route::group(['middleware' => ['auth', 'verified']], function(){
     Route::controller(App\Http\Controllers\UsersController::class)->group(function(){
         Route::get('/settings/profile', 'profile')->name('user.profile');
-        Route::post('/settings/profile/picture', 'updateProfileImage')->name('user.updateProfileImage');
-        Route::post('/settings/profile/bio-data', 'updateBioData')->name('user.updateBioData');
+        Route::post('/settings/profile/update-image', 'updateProfileImage')->name('user.updateProfileImage');
+        Route::post('/settings/profile/update/bio-data', 'updateBioData')->name('user.updateBioData');
         Route::get('/settings/security', 'security')->name('user.security');
         Route::post('/settings/security', 'updatePassword')->name('users.updatePassword');
     });
@@ -45,6 +46,8 @@ Route::group(['middleware' => ['auth', 'verified']], function(){
         Route::post('/admin/contests', 'storeContest')->name('admin.storeContest');
         Route::post('/admin/contests/{contest}', 'updateContestBaseData')->name('admin.contests.updateContestBaseData');
         Route::post('/admin/contests/{contest}/update-voting-data', 'updateContestVotingData')->name('admin.contests.updateContestVotingData');
+        Route::post('/admin/contests/{contest}/update-contest-image', 'updateContestImage')->name('admin.contests.updateContestImage');
+        Route::post('/admin/contests/{contest}/delete', 'deleteContest')->name('admin.contests.deleteContest');
 
         Route::post('/admin/contests/{contest}/start-registration', 'startContestReg')->name('admin.startContestReg');
         Route::post('/admin/contests/{contest}/end-registration', 'endContestReg')->name('admin.endContestReg');

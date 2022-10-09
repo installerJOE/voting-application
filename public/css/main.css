@@ -55,7 +55,8 @@ p{
     color: #2f2f2f
 }
 .link-text:hover{
-    text-decoration:underline !important
+    text-decoration:underline !important;
+    cursor: pointer;
 }
 .short-hr{
     width: 40px;

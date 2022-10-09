@@ -48,9 +48,7 @@ class ContestantsController extends Controller
         $username = $validated['username'];
 
         $sameUsername = Contestant::where('user_id', '!=', $user->id)->where('name', $username)->first();
-        if($sameUsername !== null) return back()->withInput($request->input())->with([
-            "error" => "This username has been taken by another contestant"
-        ]);
+        if($sameUsername !== null) return redirectBackIfError($request, "This username has been taken by another contestant");
 
         $contestant = $contest->contestants()->create([
             "name" => $username,
@@ -60,11 +58,20 @@ class ContestantsController extends Controller
             "status" => "requested",
         ]);
         
-        $imageUploaded = $contestant->save_image_to_storage($request->input('cover_image'));
+        $imageUploaded = $contestant->save_image_to_storage([
+            "image" => $request->input('cover_image'), 
+            "cover_image" => true,
+            "action" => "create",
+        ]);
+
         if(!$imageUploaded) return $this->redirectOnImageError();
 
         if($request->input('secondary_image') !== null) {
-            $imageUploaded = $contestant->save_image_to_storage($request->input('secondary_image'));
+            $imageUploaded = $contestant->save_image_to_storage([
+                "image" => $request->input('secondary_image'), 
+                "cover_image" => false,
+                "action" => "create",
+            ]);
             if(!$imageUploaded) return $this->redirectOnImageError();
         }
 
@@ -96,6 +103,12 @@ class ContestantsController extends Controller
         ]);
         return redirect()->route('user.contests')->with([
             "error" => "Your application was saved, but an error occured during image upload."
+        ]);
+    }
+    
+    private function redirectBackIfError($request, $error){
+        return back()->withInput($request->input())->with([
+            "error" => $error
         ]);
     }
 }

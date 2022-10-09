@@ -26,7 +26,7 @@
 
 @section('content-body')
 <div class="col-md-12 text-right">
-    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
+    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal"> 
         Back to Contests
     </a>
 </div>
@@ -64,6 +64,17 @@
                         </td>
                     </tr>
                 </table>
+
+                <div class="form-group" id="cover_image">
+                    <label>
+                        Cover Image
+                    </label>
+                    <div class="mt-1 image-container" style="display: none">
+                        <img height="100px" width="auto"/>
+                    </div>
+                    <input type="file" class="form-control" onchange="showImageCropper(event, '#cover_image', 16/9)" required/>
+                    <input type="hidden" class="base64image" name="cover_image" value="{{old('cover_image')}}" required/>
+                </div>
             </div>
 
             <div class="form-group mt-2">
@@ -73,7 +84,7 @@
                 <hr class="sub-header-hr"/>
                 <table class="form-table">
                     <tr>
-                        <td> <label>  Start Date </label> </td>
+                        <td> <label> Start Date </label> </td>
                         <td> <label> Duration of Registration (Days) </label> </td>
                     </tr>
                     <tr>

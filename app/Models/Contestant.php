@@ -45,17 +45,21 @@ class Contestant extends Model
 
     // upload using local driver
     public function save_image_to_storage($image){
-        $output_file = Image::saveImageToLocal($image, $this);
+        $image_file = $image["image"];
+        $cover_image = $image["cover_image"];
+        
+        $output_file = Image::saveImageToLocal($image_file, $this->name);
         if($output_file["upload_complete"]){
-            $this->save_image($output_file["filename"]);
+            $this->save_image($output_file["filename"], $cover_image);
             return true;
         }
         return false;
     }
 
-    private function save_image($imageUrl){
+    private function save_image($imageUrl, $cover_image){
         $this->images()->create([
-            "image_url" => $imageUrl
+            "image_url" => $imageUrl,
+            "cover_image" => $cover_image
         ]);
     }
 

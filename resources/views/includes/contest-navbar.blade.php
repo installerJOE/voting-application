@@ -14,7 +14,7 @@
                 <li class="nav-item">
                     <a href="{{ route('public.showContest', [
                         'slug' => $contestant->contest->slug
-                    ]) }}" class="nav-link {{Route::is('public.showContest') ? 'active-nav-link' : 'text-white'}}">
+                    ]) }}" class="nav-link {{Route::is('public.showContest') ? 'active-nav-link' : 'text-white'}} auth-link">
                         {{ __('Back to Contest') }}
                     </a>
                 </li>                

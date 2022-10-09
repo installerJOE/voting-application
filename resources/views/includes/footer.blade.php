@@ -36,7 +36,7 @@
                 Subscribe for latest news on My Counsellor.
                 <form class="footer-form" action="{{route('public.subscribeNewsletter')}}" method="POST">
                     @csrf
-                    <input type="email" style="margin-bottom:0px" class="form-control footer-email-input" placeholder="Enter your email address"/> 
+                    <input type="email" name="email" style="margin-bottom:0px" class="form-control footer-email-input" placeholder="Enter your email address"/> 
                     <br>
                     <input type="submit" class="btn btn-footer" value="Susbscribe">
                 </form>

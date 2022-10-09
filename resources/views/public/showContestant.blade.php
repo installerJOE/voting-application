@@ -42,6 +42,5 @@
             </div>
         </div>
     </div>
+    @include('public.modals.voter-modal')
 @endsection
-
-@include('public.modals.voter-modal')

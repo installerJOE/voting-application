@@ -21,7 +21,11 @@
 
 @section('content-body')
 <div class="col-md-12 text-right">
-    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal" style="float:right"> 
+    <a href="{{route('admin.contests.showContestRequests', ['slug' => $contest->slug])}}" class="btn btn-peach-bg btn-alert-modal">
+        See Requests
+    </a> &nbsp;
+
+    <a href="{{route('admin.contests.overview')}}" class="btn btn-blue-bd btn-alert-modal"> 
         Back to Contests
     </a>
 </div>
@@ -30,14 +34,38 @@
         <h1 class="sub-header text-peach"> 
             {{$contest->name}}
         </h1>
+        <div>
+            <img 
+                src="
+                    @empty($cover_image)
+                        {{asset('images/empty-contest-img.jpg')}}
+                    @else
+                        {{asset('images/contestants/' . $cover_image->image_url)}}
+                    @endempty
+                "
+                height="200px" 
+                width="auto"
+            />
+        </div>
+        <div class="mt-1" id="cover_image">
+            <label for="file_cover_img" class="text-peach link-text"> Edit Cover Image </label><br/>
+            <input type="file" id="file_cover_img" onchange="showImageCropper(event, '#cover_image', 16/9)" style="display:none"/>
+            <form action="{{route('admin.contests.updateContestImage', ['contest' => $contest])}}" method="POST" class="ajax-form">
+                @csrf
+                <input type="hidden" class="base64image" name="cover_image" value="{{old('cover_image')}}" required/>
+            </form>            
+            <input type="hidden" class="ajax-method"/>
+        </div>
     </div> 
 
     <div class="col-md-12 mt-3">
         <div class="card ctrl-btn">
             <p>
-                <button type="button" class="btn btn-peach-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestDetailsModal"> 
-                    Edit Contest 
-                </button> &nbsp;
+                @if($contest->registration_status() !== "closed")
+                    <button type="button" class="btn btn-peach-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestDetailsModal"> 
+                        Edit Contest 
+                    </button> &nbsp;
+                @endif
 
                 @if($contest->voting_status() !== "active")
                     @if($contest->registration_status() == null)
@@ -45,9 +73,12 @@
                             Start Registration 
                         </button> &nbsp;
                     @else
-                        <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestRegConfirmModal"> 
-                            End Registration
-                        </button> &nbsp;
+                        @if($contest->registration_status() !== "closed")
+                            <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestRegConfirmModal"> 
+                                End Registration
+                            </button> &nbsp;
+                        @endif
+
                         <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestVotingConfirmModal"> 
                             Start Voting Session
                         </button> &nbsp;
@@ -55,8 +86,11 @@
                 @else
                     <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestVotingConfirmModal"> 
                         End Voting
-                    </button>
+                    </button> &nbsp;
                 @endif
+                <button type="button" class="btn btn-danger btn-alert-modal" data-bs-toggle="modal" data-bs-target="#deleteContestConfirmModal"> 
+                    Delete Contest 
+                </button> &nbsp;
             </p>
         </div>
     </div>
@@ -117,7 +151,7 @@
         </div>
     </div>
 
-    <div class="col-md-12 mt-1">
+    <div class="col-md-12 mt-1 card sub-section-block">
         <h1 class="sub-header text-peach"> 
             Contest Description/Overview
         </h1>
@@ -130,13 +164,17 @@
     <div class="col-md-12 mt-1">
         <hr class="sub-header-hr"/>
         @if($contest->voting_status() !== "active")
-            <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestRegDataModal"> 
-                Change Registration Data
-            </button> &nbsp;
+            @if($contest->registration_status() !== "closed")
+                <button type="button" class="btn btn-blue-bg btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestRegDataModal"> 
+                    Change Registration Data
+                </button> &nbsp;
+            @endif
         
-            <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestVotingDataModal"> 
-                Change Voting Data
-            </button> &nbsp;
+            @if($contest->voting_status() !== "closed")
+                <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#editContestVotingDataModal"> 
+                    Change Voting Data
+                </button> &nbsp;
+            @endif
         @endif
     </div>
 </div>
@@ -148,11 +186,13 @@
 @include('user.admin.modals.end-contest-voting-confirm')
 @include('user.admin.modals.change-contest-voting-date')
 @include('user.admin.modals.change-contest-registration-date')
+@include('user.admin.modals.delete-contest-confirmation')
 
 <script>
     function submitConfirmForm(confirmForm){
         document.querySelector(confirmForm).submit();
     }
+
 </script>
 
 @endsection

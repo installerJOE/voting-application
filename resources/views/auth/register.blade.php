@@ -48,9 +48,16 @@
                 
 
             <div class="mt-1">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-blue-bg">
                     {{ __('Register') }}
                 </button>
+            </div>
+
+            <div class="mt-1">
+                Already have an account yet?
+                <a href="{{route('login')}}" class="text-blue link-text">
+                    {{ __('Login here') }}
+                </a>
             </div>
         </form>
     </div>

@@ -63,5 +63,10 @@
             </script>
         @endif
 
+        <script>
+            function submitModalForm(formId){
+                document.getElementById(formId).submit();
+            }
+        </script>
     </body>
 </html>

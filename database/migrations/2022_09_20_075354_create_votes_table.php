@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('contestant_id')->constrained('contestants')->onDelete('cascade');
             $table->string('phone_number');
             $table->string('username');
-            $table->string('number_of_votes');
+            $table->integer('number_of_votes')->default(0);
             $table->timestamps();
         });
     }

@@ -146,12 +146,18 @@
                         var base64data = reader.result; 
                         
                         // assign image value to form input
-                        $(imageDivBlock + " > .base64image").val(base64data);
+                        $(imageDivBlock + " .base64image").val(base64data);
             
-                        //display image on the frontend
-                        document.querySelector(imageDivBlock + ' > .image-container').style.display = "block"
-                        document.querySelector(imageDivBlock + ' > .image-container > img').src = base64data;
-
+                        let ajaxInput = document.querySelectorAll(imageDivBlock + ' .ajax-method');
+                        
+                        if(ajaxInput.length > 0){
+                            document.querySelectorAll(imageDivBlock + ' .ajax-form')[0].submit();
+                        }
+                        else{
+                            //display image on the frontend
+                            document.querySelector(imageDivBlock + ' > .image-container').style.display = "block"
+                            document.querySelector(imageDivBlock + ' > .image-container > img').src = base64data;
+                        }
                         // close modal and submit form
                         $modal.modal('hide');
                     }

@@ -41,6 +41,13 @@
                     {{ __('Login') }}
                 </button>
             </div>
+
+            <div class="mt-1">
+                You don't have an account yet?
+                <a href="{{route('register')}}" class="text-blue link-text">
+                    {{ __('Register here') }}
+                </a>
+            </div>
         </form>
     </div>
 @endsection

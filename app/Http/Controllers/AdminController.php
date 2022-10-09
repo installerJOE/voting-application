@@ -24,14 +24,15 @@ class AdminController extends Controller
 
     public function contests(){
         return view('user.admin.contests')->with([
-            "contests" => Contest::all()
+            "contests" => Contest::orderBy('created_at', 'DESC')->paginate(5)
         ]);
     }
 
     public function showContest($slug){
         $contest = Contest::where('slug', $slug)->firstOrFail();
         return view('user.admin.showContest')->with([
-            "contest" => $contest
+            "contest" => $contest,
+            "cover_image" => $contest->images()->where('cover_image', true)->first()
         ]);
     }
 
@@ -57,6 +58,7 @@ class AdminController extends Controller
             "voting_start_date" => "required",
             "voting_duration" => "required",
             "amount_per_vote" => "required",
+            "cover_image" => "required"
         ]);
         
         $reg_start_date = Carbon::parse(date($request->input('registration_start_date')));
@@ -89,8 +91,42 @@ class AdminController extends Controller
             "updated_by" => auth()->user()->id
         ]);
 
+        $imageUploaded = $contest->save_image_to_storage([
+            "image" => $request->input('cover_image'), 
+            "cover_image" => true,
+            "action" => "create",
+        ]);
+        
+        if(!$imageUploaded) return $this->redirectOnImageError();
+
         return redirect()->route('admin.contests.overview')->with([
             "success" => "Contest has been created successfully"
+        ]);
+    }
+
+    public function updateContestImage(Request $request, Contest $contest){
+        $this->validate($request, [
+            "cover_image" => "required"
+        ]);
+
+        $imageUploaded = $contest->save_image_to_storage([
+            "image" => $request->input('cover_image'), 
+            "cover_image" => true,
+            "action" => "update",
+        ]);
+        
+        if(!$imageUploaded) return $this->redirectOnImageError();
+        return $this->redirectRoute($contest, "Cover image has been updated successfully");
+    }
+    
+    public function deleteContest(Contest $contest){
+        if($contest->status == "active"){
+            return back()->with('error', 'This contest is active and so cannot be deleted');
+        }
+        $contest->delete();
+
+        return redirect()->route('admin.contests.overview')->with([
+            "success" => "Contest has been deleted successfully."
         ]);
     }
 

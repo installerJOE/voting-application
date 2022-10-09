@@ -20,7 +20,8 @@ class Contest extends Model
         'registration_end_at',
         'vote_start_at',
         'vote_end_at',
-        'amount_per_vote'
+        'amount_per_vote',
+        'status',
     ];
 
     public function admin(){
@@ -30,6 +31,15 @@ class Contest extends Model
     public function contestants(){
         return $this->hasMany(Contestant::class);
     }
+
+    public function partners(){
+        return $this->belongsToMany(Partner::class);
+    }
+    
+    public function images(){
+        return $this->morphMany(Image::class, 'imageable');
+    }
+
 
     public function total_votes(){
         $votes = 0;
@@ -66,5 +76,34 @@ class Contest extends Model
         $durationInSeconds = strtotime($end_date) - strtotime($start_date);
         $durationInDays = $durationInSeconds/(24 * 60 * 60);
         return $durationInDays;
+    }
+
+    // upload using local driver
+    public function save_image_to_storage($image){
+        $image_file = $image["image"];
+        $cover_image = $image["cover_image"];
+        $action = $image["action"];
+        
+        $output_file = Image::saveImageToLocal($image_file, $this->slug);
+        if($output_file["upload_complete"]){
+            $this->save_image($output_file["filename"], $cover_image, $action);
+            return true;
+        }
+        return false;
+    }
+
+    private function save_image($imageUrl, $cover_image, $action){
+        $image = $this->images()->where('cover_image', true)->first();
+        if($action == "update" && $image !== null){
+            $image->update([
+                "image_url" => $imageUrl,
+            ]);
+        }
+        else{
+            $this->images()->create([
+                "image_url" => $imageUrl,
+                "cover_image" => $cover_image
+            ]);
+        }
     }
 }

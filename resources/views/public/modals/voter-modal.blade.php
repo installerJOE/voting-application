@@ -17,8 +17,6 @@
 
                     <label> Phone Contact </label>
                     <input type="text" class="form-control" name="phone_number" value="{{old('phone_number')}}" placeholder="e.g. +234 80 2992 3948" required>
-
-                    <input type="hidden" name="contestant_id" value="1"/>
                 </form>
             </div>
             <div class="modal-footer" style="text-align:left">
