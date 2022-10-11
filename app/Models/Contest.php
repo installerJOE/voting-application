@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Contest extends Model
 {
@@ -78,32 +79,13 @@ class Contest extends Model
         return $durationInDays;
     }
 
-    // upload using local driver
-    public function save_image_to_storage($image){
-        $image_file = $image["image"];
-        $cover_image = $image["cover_image"];
-        $action = $image["action"];
-        
-        $output_file = Image::saveImageToLocal($image_file, $this->slug);
-        if($output_file["upload_complete"]){
-            $this->save_image($output_file["filename"], $cover_image, $action);
-            return true;
-        }
-        return false;
-    }
-
-    private function save_image($imageUrl, $cover_image, $action){
-        $image = $this->images()->where('cover_image', true)->first();
-        if($action == "update" && $image !== null){
-            $image->update([
-                "image_url" => $imageUrl,
-            ]);
-        }
-        else{
-            $this->images()->create([
-                "image_url" => $imageUrl,
-                "cover_image" => $cover_image
-            ]);
-        }
+    public function updateBaseData($request){
+        $this->update([
+            "name" => $request->input('name'),
+            "slug" => Str::slug($request->input('name')),
+            "description" => $request->input('description'),
+            "contestants_needed" => $request->input('number_of_contestants'),
+            "prize" => $request->input('prize'),        
+        ]);
     }
 }

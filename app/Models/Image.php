@@ -46,13 +46,8 @@ class Image extends Model
             // store image in folder
             $filename = strtolower($filename . '-' . time() . '.jpg');
             Storage::disk('contestant')->put($filename, $decoded_image);
-            return [
-                "upload_complete" => true,
-                "filename" => $filename
-            ];
+            return $filename;
         }
-        return [
-            "upload_complete" => false,
-        ];
+        return null;
     }
 }

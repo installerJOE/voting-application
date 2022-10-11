@@ -21,10 +21,12 @@ class UsersController extends Controller
         $this->validate($request, [
             "profile_image" => "required"
         ]);
+        
         $profile_image_updated = auth()->user()->update_profile_pic($request);
         if($profile_image_updated) return redirect()->route('user.profile')->with([
             'success' => 'Profile picture has been updated successfully'
         ]);
+
         return $this->redirectBackIfError($request, "An error occured while uploading the image. Please try again later.");
     }
 

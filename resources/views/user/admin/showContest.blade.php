@@ -50,9 +50,11 @@
         <div class="mt-1" id="cover_image">
             <label for="file_cover_img" class="text-peach link-text"> Edit Cover Image </label><br/>
             <input type="file" id="file_cover_img" onchange="showImageCropper(event, '#cover_image', 16/9)" style="display:none"/>
+
             <form action="{{route('admin.contests.updateContestImage', ['contest' => $contest])}}" method="POST" class="ajax-form">
                 @csrf
                 <input type="hidden" class="base64image" name="cover_image" value="{{old('cover_image')}}" required/>
+                <input type="hidden" name="image_id" value="{{$cover_image->id ?? null}}"/>
             </form>            
             <input type="hidden" class="ajax-method"/>
         </div>
@@ -79,9 +81,11 @@
                             </button> &nbsp;
                         @endif
 
-                        <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestVotingConfirmModal"> 
-                            Start Voting Session
-                        </button> &nbsp;
+                        @if($contest->voting_status() !== "closed")
+                            <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#startContestVotingConfirmModal"> 
+                                Start Voting Session
+                            </button> &nbsp;
+                        @endif
                     @endif
                 @else
                     <button type="button" class="btn btn-blue-bd btn-alert-modal" data-bs-toggle="modal" data-bs-target="#endContestVotingConfirmModal"> 

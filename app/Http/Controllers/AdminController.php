@@ -15,9 +15,24 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Mail\ContestVotingStartedMail;
 use App\Mail\ContestVotingEndsMail;
+use App\Services\Assets\ImageService;
+use App\Services\Admin\ContestService;
+use App\Services\GeneralService;
+use App\Http\Requests\StoreContestRequest;
+use App\Http\Requests\UpdateContestRequest;
+
+
 
 class AdminController extends Controller
 {
+    protected $generalService;
+    protected $contestService;
+
+    public function __construct(GeneralService $generalService, ContestService $contestService){
+        $this->generalService = $generalService;
+        $this->contestService = $contestService;
+    }
+
     public function dashboard(){
         return view('user.admin.dashboard');
     }
@@ -47,98 +62,60 @@ class AdminController extends Controller
         return view('user.admin.create-contest');
     }
 
-    public function storeContest(Request $request){
-        $this->validate($request, [
-            "name" => "required|max:255|min:4|unique:contests",
-            "description" => "required|min:10",
-            "prize" => "required",
-            "number_of_contestants" => "required|integer",
-            "registration_start_date" => "required",
-            "registration_duration" => "required",
-            "voting_start_date" => "required",
-            "voting_duration" => "required",
-            "amount_per_vote" => "required",
-            "cover_image" => "required"
-        ]);
+    public function storeContest(StoreContestRequest $request, ImageService $imageService){
+        $validated = $request->validated();       
+        $contestSaved = $this->contestService->addNewContest($validated);        
         
-        $reg_start_date = Carbon::parse(date($request->input('registration_start_date')));
-        $voting_start_date = Carbon::parse(date($request->input('voting_start_date')));
-        $reg_end_date = Carbon::parse(date($request->input('registration_start_date')))->addDays($request->input('registration_duration'));
-        
-        if(time() > strtotime($reg_start_date)){
-            return back()->withInput($request->input())->with([
-                "error" => "Registration date must be ahead of today",
-            ]);
+        if($contestSaved["complete"] == false){
+            return $this->generalService->redirectBackOnError($request, $contestSaved["error"]);
         }
 
-        if(strtotime($voting_start_date) < strtotime($reg_end_date)){
-            return back()->withInput($request->input())->with([
-                "error" => "Please adjust the 'voting start date' to a date that comes after contest registration period",
-            ]);
-        }
-        
-        $contest = Contest::create([
-            "name" => $request->input('name'),
-            "slug" => Str::slug($request->input('name')),
-            "description" => $request->input('description'),
-            "contestants_needed" => $request->input('number_of_contestants'),
-            "prize" => $request->input('prize'),        
-            "amount_per_vote" => $request->input('amount_per_vote'),        
-            "registration_start_at" => $reg_start_date->format('Y-m-d H:i:s'),
-            "registration_end_at" => $reg_end_date,
-            "vote_start_at" => $voting_start_date->format('Y-m-d H:i:s'),
-            "vote_end_at" => $voting_start_date->addDays($request->input('voting_duration')),
-            "updated_by" => auth()->user()->id
-        ]);
-
-        $imageUploaded = $contest->save_image_to_storage([
-            "image" => $request->input('cover_image'), 
+        $imageUploaded = $imageService->uploadAndSaveImage([
             "cover_image" => true,
-            "action" => "create",
-        ]);
+            "imageable" => $contestSaved["data"],
+            "update_image" => false,
+            "filenameAttribute" => "slug",
+            "image" => $validated["cover_image"]
+        ], null);        
         
-        if(!$imageUploaded) return $this->redirectOnImageError();
-
+        if(!$imageUploaded) return $this->contestService->redirectOnImageError($contestSaved["data"]);
+        
         return redirect()->route('admin.contests.overview')->with([
             "success" => "Contest has been created successfully"
         ]);
     }
 
-    public function updateContestImage(Request $request, Contest $contest){
+    public function updateContestImage(Request $request, Contest $contest, ImageService $imageService){
         $this->validate($request, [
-            "cover_image" => "required"
+            "cover_image" => "required",
         ]);
 
-        $imageUploaded = $contest->save_image_to_storage([
-            "image" => $request->input('cover_image'), 
+        $imageUploaded = $imageService->uploadAndSaveImage([
             "cover_image" => true,
-            "action" => "update",
-        ]);
-        
-        if(!$imageUploaded) return $this->redirectOnImageError();
-        return $this->redirectRoute($contest, "Cover image has been updated successfully");
+            "imageable" => $contest,
+            "update_image" => true,
+            "filenameAttribute" => "slug",
+            "image" => $request->input('cover_image')
+        ], $contest->images()->where('id', $request->image_id)->first());        
+
+        if(!$imageUploaded) return $this->generalService->redirectBackOnError($request, "An error occured during upload");
+        return $this->contestService->redirectToContestPage($contest, "Cover image has been updated successfully");
     }
     
-    public function deleteContest(Contest $contest){
+    public function deleteContest(Request $request, Contest $contest){
         if($contest->status == "active"){
-            return back()->with('error', 'This contest is active and so cannot be deleted');
+            return $this->generalService->redirectBackOnError($request, "This contest is active and so cannot be deleted");
         }
         $contest->delete();
-
         return redirect()->route('admin.contests.overview')->with([
             "success" => "Contest has been deleted successfully."
         ]);
     }
 
     public function startContestReg(Contest $contest){
-        $contest->update([
-            "registration_start_at" => Carbon::now(),
-            "registration_end_at" => Carbon::now()->addDays($contest->registration_duration()),
-            "updated_by" => auth()->user()->id,
-        ]);
-
+        $contestVotingStarted = $this->contestService->startRegistration($contest);
         $message = "Contest registration has been started successfully";
-        return $this->redirectRoute($contest, $message);
+        return $this->contestService->redirectToContestPage($contest, $message);
     }
 
     public function endContestReg(Contest $contest){
@@ -148,81 +125,30 @@ class AdminController extends Controller
         ]);
 
         $message = "Contest registration has been ended successfully";
-        return $this->redirectRoute($contest, $message);
+        return $this->contestService->redirectToContestPage($contest, $message);
     }
 
-    public function startContestVoting(Contest $contest){
-        if($contest->registration_status() == null){
-            $message = "You have not started registration yet";
-            return $this->redirectRoute($contest, $message);
-        }
-        
-        if($contest->registration_status() == "active"){
-            $contest->update([
-                "registration_end_at" => Carbon::now()
-            ]);
-        }
-        $contest->update([
-            "vote_start_at" => Carbon::now(),
-            "updated_by" => auth()->user()->id,
-        ]);
-        
-        // send notification to contestants
-        // foreach($contest->contestants as $contestant){
-        //     Mail::to($contestant->user->email)->send(new ContestVotingStartedMail($contestant));
-        // }
-
-        
-        $message = "Voting has been started for this contest successfully";
-        return $this->redirectRoute($contest, $message);
+    public function startContestVoting(Request $request, Contest $contest){
+        $contestVotingStarted = $this->contestService->startVoting($contest);
+        if(!$contestVotingStarted){
+            return $this->generalService->redirectBackOnError($request, "You have not started registration yet");
+        }        
+        return $this->contestService->redirectToContestPage($contest, "Voting has been started for this contest successfully");
     }
 
-    public function endContestVoting(Contest $contest){
-        
-        // send notification to contestants
-        // foreach($contest->contestants as $contestant){
-        //     Mail::to($contestant->user->email)->send(new ContestVotingEndsMail($contestant));
-        // }
-
-        if($contest->voting_status() != "active"){
-            $message = "You have not started voting session yet";
-            return $this->redirectRoute($contest, $message);
-        }
-
-        $contest->update([
-            "vote_end_at" => Carbon::now(),
-            "updated_by" => auth()->user()->id
-        ]);
-
-        $message = "You have successfully ended voting for this contest.";
-        return $this->redirectRoute($contest, $message);
+    public function endContestVoting(Request $request, Contest $contest){
+        $votingEnded = $this->contestService->endVoting($contest);
+        if(!$votingEnded){
+            return $this->generalService->redirectBackOnError($request, "You have not started voting session yet");
+        }        
+        return $this->contestService->redirectToContestPage($contest, "You have successfully ended voting for this contest.");
     }
 
-    private function redirectRoute($contest, $message){
-        return redirect()->route('admin.showContest', ['slug' => $contest->slug])->with([
-            "success" => $message
-        ]);
-    }
 
-    public function updateContestBaseData(Request $request, Contest $contest){
-        $this->validate($request, [
-            "description" => "required|min:10",
-            "prize" => "required",
-            "number_of_contestants" => "required|integer",
-        ]);
-
-        if($request->input('name') !== $contest->name) $this->validate($request, [
-            "name" => "required|max:255|min:4|unique:contests",
-        ]);
-
-        $contest->update([
-            "name" => $request->input('name'),
-            "slug" => Str::slug($request->input('name')),
-            "description" => $request->input('description'),
-            "contestants_needed" => $request->input('number_of_contestants'),
-            "prize" => $request->input('prize'),        
-        ]);        
-        return $this->redirectRoute($contest, "Base data of contest has been updated successfully");
+    public function updateContestBaseData(UpdateContestRequest $request, Contest $contest){
+        $validated = $request->validated();
+        $contest->updateBaseData($request);
+        return $this->contestService->redirectToContestPage($contest, "Base data of this contest has been updated successfully");
     }
 
     public function updateContestRegData(){

@@ -87,7 +87,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ]);
             return true;
         }
-        return  false;
+        return false;
     }
 
     public function update_password($request){
